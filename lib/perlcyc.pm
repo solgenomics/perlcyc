@@ -4,9 +4,7 @@ use Socket;
 use strict;
 use Carp;
 
-
 sub new {
-    
     my $class = shift;
     my $organism =shift;
     my $debug = shift;
@@ -23,12 +21,32 @@ sub new {
     return bless $vars, $class;
 }
 
+=head2 socket_name
+
+  Usage: $cyc->socket_name($new_socket_name);
+  Desc : get/set the name of the local socket file
+         to connect to
+  Args : (optional) local socket name.
+         defaults to '/tmp/ptools-socket'
+  Ret  : current set local socket filename
+  Side Effects: none
+  Example:
+
+=cut
+
+sub socket_name {
+    my $self = shift;
+    $self->{_socket_name} = shift if @_;
+    $self->{_socket_name};
+}
 
 sub makeSocket {
     my $self = shift;
     # get socket connection with pathway-tools
     socket(SOCK, PF_UNIX, SOCK_STREAM, 0) || die "socket: $!";
-    connect (SOCK, sockaddr_un($self->{_socket_name})) || die "connect: $!";
+    my $sock =
+    connect (SOCK,  sockaddr_un($self->{_socket_name}))
+        or croak "could not connect to Pathway Tools socket '$self->{_socket_name}': $!\nIs Pathway Tools running?\n";
     my $old_fh = select(SOCK); $|=1; select($old_fh);
     $self->{_socket} = \*SOCK;
 }
