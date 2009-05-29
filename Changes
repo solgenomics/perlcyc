@@ -1,11 +1,49 @@
 Version History
 
-    0.1 March, 2002 initial version
+1.25
 
-    0.3 April 22, 2002 Added better list parsing
+Added Module::Build build structure, fixed README text, tweaked POD for compliance
 
-    0.9 Added more functions
 
-    1.0 Added pod documentation and eliminated some bugs.evision history for Perl extension perlcyc.
+1.21
 
-    1.21 Added Module::Build build structure, fixed README text, tweaked POD for compliance
+Added three functions that are new in PT v. 12: 
+ pwys-of-organism-in-meta
+ enzymes-of-organism-in-meta
+ lower-taxa-or-species-p org-frame
+
+ other new functions:
+ get-class-all-subs
+
+ genes-regulating-gene
+ genes-regulated-by-gene
+ terminators-affecting-gene
+ transcription-unit-mrna-binding-sites
+ transcription-unit-activators
+ transcription-unit-inhibitors
+ containing-tus
+ direct-activators
+ direct-inhibitors
+
+1.2
+
+Added three functions: create-frame, create-class, and create-instance.
+
+
+1.0
+
+Added pod documentation and eliminated some bugs.evision history for Perl extension perlcyc.
+
+0.9
+
+Added more functions
+
+0.3
+
+April 22, 2002 Added better list parsing
+
+
+0.1
+
+March, 2002 initial version
+

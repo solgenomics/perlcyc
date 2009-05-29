@@ -1,0 +1,19 @@
+Installation is standard as for any Perl module. If you downloaded the
+compressed tar file, uncompress and untar the file with the following
+commands:
+
+ gzip < perlcyc-*.tar.gz | tar xvf -
+
+This will create a directory called perlcyc in your current
+directory. To install the program, type
+
+ make
+ make install
+
+The program should now be available in all your Perl programs. 'make
+install' may require root access or access through sudo. For the
+latter case, type
+
+ sudo make install
+
+Which will prompt you for your password.
