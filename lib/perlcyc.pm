@@ -1,5 +1,5 @@
 package perlcyc;
-$VERSION="1.21";
+$VERSION="1.25";
 use Socket;
 use strict;
 use Carp;
@@ -1009,238 +1009,168 @@ C<use perlcyc;>
 C<my $cyc = perlcyc -E<gt> new("ARA");>
 C<my @pathways = $cyc -E<gt> all_pathways();>
 
-=head1 VERSION
-
-Version 1.21 (May 2008).
-
-
-=head1 HISTORY
-
-Version History
-
-=over 5
-
-=item 0.1  March, 2002
-     
-[Lukas Mueller] initial version
-
-=item 0.3  April 22, 2002
-     
-[Danny Yoo] Added better list parsing
-
-=item 0.9  [Lukas Mueller] 
-
-Added more functions
-
-=item 1.0  August 28, 2002 [Lukas Mueller] 
-
-Added pod documentation and eliminated some bugs.
-
-=item 1.1  June 6, 2003
-     
-[Thomas Yan] Fixed some minor bugs.
-
-=item 1.2  December 7, 2006 [Lukas Mueller] 
-
-Added three functions: create-frame, create-class, and create-instance.
-
-=item 1.21 May 7, 2008 [Lukas Mueller]
-
-Added three functions that are new in PT v. 12: 
- pwys-of-organism-in-meta
- enzymes-of-organism-in-meta
- lower-taxa-or-species-p org-frame
-
- other new functions:
- get-class-all-subs
-
- genes-regulating-gene
- genes-regulated-by-gene
- terminators-affecting-gene
- transcription-unit-mrna-binding-sites
- transcription-unit-activators
- transcription-unit-inhibitors
- containing-tus
- direct-activators
- direct-inhibitors
-
-
-=back
-
-=head1 INSTALLATION
-
-Installation is standard as for any Perl module. If you downloaded the
-compressed tar file, uncompress and untar the file with the following
-commands:
-
- gzip < perlcyc.tar.gz | tar xvf -
-
-This will create a directory called perlcyc in your current
-directory. To install the program, type
-
- make
- make install
-
-The program should now be available in all your Perl programs. 'make
-install' may require root access or access through sudo. For the
-latter case, type
-
- sudo make install
-
-You will be prompted for your password.
-
-=head1 PATHWAY TOOL REQUIREMENTS
+=head1 PATHWAY TOOLS REQUIREMENTS
 
 To use the Perl module, you also need the socket_server.lisp
-program. In Pathway Tools version 8.0 or later, the server program can be started with the command line option "-api". On earlier versions, the server daemon needs to be loaded manually, as follows:
-start Pathway-Tools with the -lisp option, at the prompt, type: (load "/path/to/socket_server.lisp"),
-then start the socket_server by typing (start_external_access_daemon :verbose? t). The server is now ready to accept connections and queries.
+program. In Pathway Tools version 8.0 or later, the server program can
+be started with the command line option "-api". On earlier versions,
+the server daemon needs to be loaded manually, as follows: start
+Pathway-Tools with the -lisp option, at the prompt, type: (load
+"/path/to/socket_server.lisp"), then start the socket_server by typing
+(start_external_access_daemon :verbose? t). The server is now ready to
+accept connections and queries.
 
 =head1 DESCRIPTION
 
 perlcyc.pm is a Perl module for accessing internal Pathway-Tools
 functions. For the description of what the individual functions do,
 please refer to the Pathway Tools documentation at
-http://bioinformatics.ai.sri.com/ptools .  
+http://bioinformatics.ai.sri.com/ptools .
 
 In general, the Lisp
 function name has to be converted to something compatible with Perl:
 Dashes have to be replaced by underlines, and question marks with
 underline p (_p).  
 
-Note that the optional parameters of all functions
-    are not supported in perlcyc, except for all_pathways() which can use the optional arguments :all T to get the base pathways only (no super-pathways).
+Note that the optional parameters of all functions are not supported
+in perlcyc, except for all_pathways() which can use the optional
+arguments :all T to get the base pathways only (no super-pathways).
 
 =head3 Limitations
 
-Perlcyc does not run on Windows, because perlcyc creates a file system socket that is not supported in Windows. It should run in Solaris, Linux, MacOSX and other UNIX-like operating systems.
+Perlcyc does not run on Windows, because perlcyc creates a file system
+socket that is not supported in Windows. It should run in Solaris,
+Linux, MacOSX and other UNIX-like operating systems.
 
-Perlcyc does not implement the GFP objects in Perl; it just sends snippets of code to Pathway-Tools through the file socket connection. Because of this, only one such connection can be openend at any given time. 
+Perlcyc does not implement the GFP objects in Perl; it just sends
+snippets of code to Pathway-Tools through the file socket
+connection. Because of this, only one such connection can be openend
+at any given time.
 
-Given that the objects are not implemented in Perl, only object references are supported.
-
+Given that the objects are not implemented in Perl, only object
+references are supported.
 
 =head3 Available functions:
 
-Object functions:
+  Object functions:
 
- new
- Parameters: The knowledge base name. Required!
+   new
+   Parameters: The knowledge base name. Required!
 
-GFP functions: 
-More information on these functions can be found at:
-http://www.ai.sri.com/~gfp/spec/paper/node63.html
-  
- get_slot_values
- get_slot_value 
- get_class_all_instances 
- instance_all_instance_of_p
- member_slot_value_p 
- fequal 
- current_kb  
- put_slot_values
- put_slot_value
- add_slot_value
- replace_slot_value
- remove_slot_value
- coercible_to_frame_p
- class_all_type_of_p
- get_instance_direct_types
- get_instance_all_types
- get_frame_slots
- put_instance_types
- save_kb
- revert_kb
- 
-Pathway-tools functions:
-More information on these functions can be found at:
-http://bioinformatics.ai.sri.com/ptools/ptools-fns.html
+  GFP functions: 
+  More information on these functions can be found at:
+  http://www.ai.sri.com/~gfp/spec/paper/node63.html
+    
+   get_slot_values
+   get_slot_value 
+   get_class_all_instances 
+   instance_all_instance_of_p
+   member_slot_value_p 
+   fequal 
+   current_kb  
+   put_slot_values
+   put_slot_value
+   add_slot_value
+   replace_slot_value
+   remove_slot_value
+   coercible_to_frame_p
+   class_all_type_of_p
+   get_instance_direct_types
+   get_instance_all_types
+   get_frame_slots
+   put_instance_types
+   save_kb
+   revert_kb
+   
+  Pathway-tools functions:
+  More information on these functions can be found at:
+  http://bioinformatics.ai.sri.com/ptools/ptools-fns.html
 
- select_organism 
- all_pathways   
- all_orgs
- all_rxns
- genes_of_reaction
- substrates_of_reaction
- enzymes_of_reaction
- reaction_reactants_and_products
- get_predecessors
- get_successors
- genes_of_pathway
- enzymes_of_pathway
- compounds_of_pathway
- substrates_of_pathway
- transcription_factor_p
- all_cofactors
- all_modulators
- monomers_of_protein
- components_of_protein
- genes_of_protein 
- reactions_of_enzyme
- enzyme_p 
- transport_p
- containers_of 
- modified_forms 
- modified_containers
- top_containers 
- reactions_of_protein
- regulon_of_protein 
- transcription_units_of_protein
- regulator_proteins_of_transcription_unit
- enzymes_of_gene 
- all_products_of_gene
- reactions_of_gene 
- pathways_of_gene 
- chromosome_of_gene
- transcription_unit_of_gene 
- transcription_unit_promoter 
- transcription_unit_genes 
- transcription_unit_binding_sites 
- transcription_unit_transcription_factors
- transcription_unit_terminators 
- all_transported_chemicals 
- reactions_of_compound 
- full_enzyme_name 
- enzyme_activity_name 
- find_indexed_frame
- create-instance
- create-class
- create-frame
+   select_organism 
+   all_pathways   
+   all_orgs
+   all_rxns
+   genes_of_reaction
+   substrates_of_reaction
+   enzymes_of_reaction
+   reaction_reactants_and_products
+   get_predecessors
+   get_successors
+   genes_of_pathway
+   enzymes_of_pathway
+   compounds_of_pathway
+   substrates_of_pathway
+   transcription_factor_p
+   all_cofactors
+   all_modulators
+   monomers_of_protein
+   components_of_protein
+   genes_of_protein 
+   reactions_of_enzyme
+   enzyme_p 
+   transport_p
+   containers_of 
+   modified_forms 
+   modified_containers
+   top_containers 
+   reactions_of_protein
+   regulon_of_protein 
+   transcription_units_of_protein
+   regulator_proteins_of_transcription_unit
+   enzymes_of_gene 
+   all_products_of_gene
+   reactions_of_gene 
+   pathways_of_gene 
+   chromosome_of_gene
+   transcription_unit_of_gene 
+   transcription_unit_promoter 
+   transcription_unit_genes 
+   transcription_unit_binding_sites 
+   transcription_unit_transcription_factors
+   transcription_unit_terminators 
+   all_transported_chemicals 
+   reactions_of_compound 
+   full_enzyme_name 
+   enzyme_activity_name 
+   find_indexed_frame
+   create-instance
+   create-class
+   create-frame
 
- pwys-of-organism-in-meta
- enzymes-of-organism-in-meta
- lower-taxa-or-species-p org-frame
- get-class-all-subs
+   pwys-of-organism-in-meta
+   enzymes-of-organism-in-meta
+   lower-taxa-or-species-p org-frame
+   get-class-all-subs
 
-added 5/2008 per Suzanne's request:
- genes-regulating-gene
- genes-regulated-by-gene
- terminators-affecting-gene
- transcription-unit-mrna-binding-sites
- transcription-unit-activators
- transcription-unit-inhibitors
- containing-tus
- direct-activators
- direct-inhibitors
+  added 5/2008 per Suzanne's request:
+   genes-regulating-gene
+   genes-regulated-by-gene
+   terminators-affecting-gene
+   transcription-unit-mrna-binding-sites
+   transcription-unit-activators
+   transcription-unit-inhibitors
+   containing-tus
+   direct-activators
+   direct-inhibitors
 
 
 
-not supported:
- get_frames_matching_value (why not?)
+  not supported:
+   get_frames_matching_value (why not?)
 
-Internal functions:
- 
- parselisp
- send_query
- retrieve_results
- wrap_query
- call_func
- debug 
- debug_on
- debug_off 
+  Internal functions:
+   
+   parselisp
+   send_query
+   retrieve_results
+   wrap_query
+   call_func
+   debug 
+   debug_on
+   debug_off 
 
-Deprecated functions
- parse_lisp_list
+  Deprecated functions
+   parse_lisp_list
 
 =head1 EXAMPLES
 
@@ -1259,7 +1189,8 @@ Change product type for all genes that are in a pathway to 'Enzyme'
  }
 
 
-Load a file containing two columns with accession and a comment into the comment field of the corresponding accession:
+Load a file containing two columns with accession and a comment into
+the comment field of the corresponding accession:
 
  use perlcyc;
  use strict;
@@ -1341,19 +1272,34 @@ Refer to http://aracyc.stanford.edu for more information on how to
 run the server program.
 
 Please send bug reports and comments to 
-LAM87@cornell.edu
+lam87@cornell.edu
 
 =head1 LICENSE
 
-According to the MIT License, http://www.opensource.org/licenses/mit-license.php
+According to the MIT License,
+http://www.opensource.org/licenses/mit-license.php
 
-Copyright (c) 2002 by Lukas Mueller, The Arabidopsis Information Resource (TAIR) and the Carnegie Institution of Washington.
+Copyright (c) 2002 by Lukas Mueller, The Arabidopsis Information
+Resource (TAIR) and the Carnegie Institution of Washington.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 =head1 AUTHOR
 
