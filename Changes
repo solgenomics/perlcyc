@@ -8,4 +8,4 @@ Version History
 
     1.0 Added pod documentation and eliminated some bugs.evision history for Perl extension perlcyc.
 
-
+    1.21 Added Module::Build build structure, fixed README text, tweaked POD for compliance
