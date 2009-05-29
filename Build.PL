@@ -1,7 +1,7 @@
 use Module::Build;
 my $build = Module::Build->new(
     module_name        => 'perlcyc',
-    license            => 'perl',
+    license            => 'mit',
     create_makefile_pl => 'passthrough',
 
     # and now the list of perl module dependencies
