@@ -1,0 +1,917 @@
+# Enumeration Operations
+
+sub all_cofactors {
+my $self = shift;
+return $self -> call_func("all-cofactors");
+}
+
+sub all_enzymes {
+my $self = shift;
+return $self -> call_func("all-enzymes");
+}
+
+sub all_genetic_regulation_proteins {
+my $self = shift;
+return $self -> call_func("all-genetic-regulation-proteins");
+}
+
+sub all_modulators {
+my $self = shift;
+return $self -> call_func("all-modulators");
+}
+
+sub all_operons {
+my $self = shift;
+return $self -> call_func("all-operons");
+}
+
+sub all_pathways {
+my $self = shift;
+return $self -> call_func("all-pathways");
+}
+
+sub all_protein_complexes {
+my $self = shift;
+my $filter = shift;
+return $self -> call_func("all-protein-complexes \'$filter");
+}
+
+sub all_rxns {
+my $self = shift;
+return $self -> call_func("all-rxns");
+}
+
+sub all_sigma_factors {
+my $self = shift;
+return $self -> call_func("all-sigma-factors");
+}
+
+sub all_substrates {
+my $self = shift;
+my $rxns = shift;
+return $self -> call_func("all-substrates \'$rxns");
+}
+
+sub all_transcription_factors {
+my $self = shift;
+return $self -> call_func("all-transcription-factors");
+}
+
+sub all_transported_chemicals {
+my $self = shift;
+return $self -> call_func("all-transported-chemicals");
+}
+
+sub all_transporters {
+my $self = shift;
+return $self -> call_func("all-transporters");
+}
+
+sub rxns_catalyzed_by_complex {
+my $self = shift;
+return $self -> call_func("rxns-catalyzed-by-complex");
+}
+
+sub rxns_w_isozymes {
+my $self = shift;
+return $self -> call_func("rxns-w-isozymes");
+}
+
+# Object Name Manipulation Operations
+
+sub enzyme_activity_name {
+my $self = shift;
+my $enzyme = shift;
+return $self -> call_func("enzyme-activity-name \'$enzyme");
+}
+
+sub full_enzyme_name {
+my $self = shift;
+my $enzyme = shift;
+return $self -> call_func("full-enzyme-name \'$enzyme");
+}
+
+sub get_name_string {
+my $self = shift;
+my $item = shift;
+return $self -> call_func("get-name-string \'$item");
+}
+
+# Operations on Compounds
+
+sub activated_or_inhibited_by_compound {
+my $self = shift;
+my $cpds = shift;
+my $slots = shift;
+return $self -> call_func("activated-or-inhibited-by-compound \'$cpds \'$slots");
+}
+
+sub pathways_of_compound {
+my $self = shift;
+my $cpd = shift;
+return $self -> call_func("pathways-of-compound \'$cpd");
+}
+
+sub reactions_of_compound {
+my $self = shift;
+my $cpd = shift;
+return $self -> call_func("reactions-of-compound \'$cpd");
+}
+
+sub substrate_of_generic_rxn_p {
+my $self = shift;
+my $cpd = shift;
+my $rxn = shift;
+return $self -> call_func_that_returns_boolean("substrate-of-generic-rxn? \'$cpd \'$rxn");
+}
+
+sub tfs_bound_to_compound {
+my $self = shift;
+my $cpd = shift;
+return $self -> call_func("tfs-bound-to-compound \'$cpd");
+}
+
+# Operations on Enzymatic-Reactions
+
+sub cofactors_and_pgroups_of_enzrxn {
+my $self = shift;
+my $enzrxn = shift;
+return $self -> call_func("cofactors-and-pgroups-of-enzrxn \'$enzrxn");
+}
+
+sub enzrxn_activators {
+my $self = shift;
+my $er = shift;
+return $self -> call_func("enzrxn-activators \'$er");
+}
+
+sub enzrxn_inhibitors {
+my $self = shift;
+my $er = shift;
+return $self -> call_func("enzrxn-inhibitors \'$er");
+}
+
+sub pathway_allows_enzrxn_p {
+my $self = shift;
+my $pwy = shift;
+my $rxn = shift;
+my $enzrxn = shift;
+return $self -> call_func_that_returns_boolean("pathway-allows-enzrxn? \'$pwy \'$rxn \'$enzrxn");
+}
+
+sub pathways_of_enzrxn {
+my $self = shift;
+my $enzrxn = shift;
+return $self -> call_func("pathways-of-enzrxn \'$enzrxn");
+}
+
+# Operations on Genes
+
+sub adjacent_genes_p {
+my $self = shift;
+my $g1 = shift;
+my $g2 = shift;
+return $self -> call_func_that_returns_boolean("adjacent-genes? \'$g1 \'$g2");
+}
+
+sub all_products_of_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("all-products-of-gene \'$gene");
+}
+
+sub chromosome_of_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("chromosome-of-gene \'$gene");
+}
+
+sub chromosome_of_object {
+my $self = shift;
+my $object = shift;
+return $self -> call_func("chromosome-of-object \'$object");
+}
+
+sub connecting_genes {
+my $self = shift;
+my $g1 = shift;
+my $g2 = shift;
+return $self -> call_func("connecting-genes \'$g1 \'$g2");
+}
+
+sub cotranscribed_genes {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("cotranscribed-genes \'$gene");
+}
+
+sub dna_binding_site_p {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func_that_returns_boolean("dna-binding-site-p \'$gene");
+}
+
+sub enzymes_of_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("enzymes-of-gene \'$gene");
+}
+
+sub gene_clusters {
+my $self = shift;
+my $genes = shift;
+return $self -> call_func("gene-clusters \'$genes");
+}
+
+sub gene_p {
+my $self = shift;
+my $frame = shift;
+return $self -> call_func_that_returns_boolean("gene-p \'$frame");
+}
+
+sub gene_transcription_units {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("gene-transcription-units \'$gene");
+}
+
+sub genes_in_same_operon {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("genes-in-same-operon \'$gene");
+}
+
+sub neighboring_genes_p {
+my $self = shift;
+my $g1 = shift;
+my $g2 = shift;
+return $self -> call_func_that_returns_boolean("neighboring-genes-p \'$g1 \'$g2");
+}
+
+sub next_gene_on_replicon {
+my $self = shift;
+my $g = shift;
+return $self -> call_func("next-gene-on-replicon \'$g");
+}
+
+sub operon_of_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("operon-of-gene \'$gene");
+}
+
+sub pathways_of_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("pathways-of-gene \'$gene");
+}
+
+sub phantom_gene_p {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func_that_returns_boolean("phantom-gene-p \'$gene");
+}
+
+sub previous_gene_on_replicon {
+my $self = shift;
+my $g = shift;
+return $self -> call_func("previous-gene-on-replicon \'$g");
+}
+
+sub protein_coding_gene_p {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func_that_returns_boolean("protein-coding-gene? \'$gene");
+}
+
+sub pseudo_gene_p {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func_that_returns_boolean("pseudo-gene-p \'$gene");
+}
+
+sub reactions_of_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("reactions-of-gene \'$gene");
+}
+
+sub rna_coding_gene_p {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func_that_returns_boolean("rna-coding-gene? \'$gene");
+}
+
+sub terminatorp {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func_that_returns_boolean("terminatorp \'$gene");
+}
+
+sub terminators_affecting_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("terminators-affecting-gene \'$gene");
+}
+
+sub unmodified_gene_product {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("unmodified-gene-product \'$gene");
+}
+
+sub unmodified_gene_products {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("unmodified-gene-products \'$gene");
+}
+
+# Operations on Pathways
+
+sub 1compounds_of_pathway {
+my $self = shift;
+my $pwy = shift;
+return $self -> call_func("1compounds-of-pathway \'$pwy");
+}
+
+sub enzymes_of_pathway {
+my $self = shift;
+my $pwy = shift;
+return $self -> call_func("enzymes-of-pathway \'$pwy");
+}
+
+sub genes_of_pathway {
+my $self = shift;
+my $pwy = shift;
+return $self -> call_func("genes-of-pathway \'$pwy");
+}
+
+sub noncontiguous_pathway_p {
+my $self = shift;
+my $pwy = shift;
+return $self -> call_func_that_returns_boolean("noncontiguous-pathway-p \'$pwy");
+}
+
+sub pathway_components {
+my $self = shift;
+my $pwy = shift;
+return $self -> call_func("pathway-components \'$pwy");
+}
+
+sub rxns_adjacent_in_pwy_p {
+my $self = shift;
+my $rxn1 = shift;
+my $rxn2 = shift;
+my $pwy = shift;
+return $self -> call_func_that_returns_boolean("rxns-adjacent-in-pwy-p \'$rxn1 \'$rxn2 \'$pwy");
+}
+
+sub substrates_of_pathway {
+my $self = shift;
+my $pwy = shift;
+return $self -> call_func("substrates-of-pathway \'$pwy");
+}
+
+sub variants_of_pathway {
+my $self = shift;
+my $pwy = shift;
+return $self -> call_func("variants-of-pathway \'$pwy");
+}
+
+# Operations on Proteins
+
+sub all_direct_forms_of_protein {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("all-direct-forms-of-protein \'$protein");
+}
+
+sub all_forms_of_protein {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("all-forms-of-protein \'$protein");
+}
+
+sub all_transporters_across {
+my $self = shift;
+my $membranes = shift;
+my $method = shift;
+return $self -> call_func("all-transporters-across \'$membranes \'$method");
+}
+
+sub autocatalytic_reactions_of_enzyme {
+my $self = shift;
+my $prot = shift;
+return $self -> call_func("autocatalytic-reactions-of-enzyme \'$prot");
+}
+
+sub base_components_of_protein {
+my $self = shift;
+my $p = shift;
+return $self -> call_func("base-components-of-protein \'$p");
+}
+
+sub complex_p {
+my $self = shift;
+my $frame = shift;
+return $self -> call_func_that_returns_boolean("complex-p \'$frame");
+}
+
+sub containers_of {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("containers-of \'$protein");
+}
+
+sub enzyme_p {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func_that_returns_boolean("enzyme? \'$protein");
+}
+
+sub genes_of_protein {
+my $self = shift;
+my $p = shift;
+return $self -> call_func("genes-of-protein \'$p");
+}
+
+sub genes_of_proteins {
+my $self = shift;
+my $p = shift;
+return $self -> call_func("genes-of-proteins \'$p");
+}
+
+sub homomultimeric_containers_of {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("homomultimeric-containers-of \'$protein");
+}
+
+sub leader_peptide_p {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func_that_returns_boolean("leader-peptide? \'$protein");
+}
+
+sub modified_and_unmodified_forms {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("modified-and-unmodified-forms \'$protein");
+}
+
+sub modified_containers {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("modified-containers \'$protein");
+}
+
+sub modified_forms {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("modified-forms \'$protein");
+}
+
+sub monomers_of_protein {
+my $self = shift;
+my $p = shift;
+return $self -> call_func("monomers-of-protein \'$p");
+}
+
+sub polypeptide_or_homomultimer_p {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func_that_returns_boolean("polypeptide-or-homomultimer-p \'$protein");
+}
+
+sub protein_in_compartment_p {
+my $self = shift;
+my $rxn = shift;
+my $compartments = shift;
+return $self -> call_func_that_returns_boolean("protein-in-compartment-p \'$rxn \'$compartments");
+}
+
+sub protein_or_rna_containers_of {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("protein-or-rna-containers-of \'$protein");
+}
+
+sub protein_p {
+my $self = shift;
+my $frame = shift;
+return $self -> call_func_that_returns_boolean("protein-p \'$frame");
+}
+
+sub reactions_of_enzyme {
+my $self = shift;
+my $e = shift;
+return $self -> call_func("reactions-of-enzyme \'$e");
+}
+
+sub reactions_of_protein {
+my $self = shift;
+my $p = shift;
+return $self -> call_func("reactions-of-protein \'$p");
+}
+
+sub reduce_modified_proteins {
+my $self = shift;
+my $prots = shift;
+return $self -> call_func("reduce-modified-proteins \'$prots");
+}
+
+sub small_molecule_cplxes_of_prot {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("small-molecule-cplxes-of-prot \'$protein");
+}
+
+sub species_of_protein {
+my $self = shift;
+my $p = shift;
+return $self -> call_func("species-of-protein \'$p");
+}
+
+sub top_containers {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("top-containers \'$protein");
+}
+
+sub unmodified_form {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("unmodified-form \'$protein");
+}
+
+sub unmodified_or_unbound_form {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("unmodified-or-unbound-form \'$protein");
+}
+
+# Operations on Reactions
+
+sub compartment_of_rxn {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("compartment-of-rxn \'$rxn");
+}
+
+sub compartments_of_reaction {
+my $self = shift;
+my $rxn = shift;
+my $default_compartment = shift;
+return $self -> call_func("compartments-of-reaction \'$rxn \'$default_compartment");
+}
+
+sub enzymes_of_reaction {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("enzymes-of-reaction \'$rxn");
+}
+
+sub genes_of_reaction {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("genes-of-reaction \'$rxn");
+}
+
+sub get_predecessors {
+my $self = shift;
+my $rxn = shift;
+my $pwy = shift;
+return $self -> call_func("get-predecessors \'$rxn \'$pwy");
+}
+
+sub get_successors {
+my $self = shift;
+my $rxn = shift;
+my $pwy = shift;
+return $self -> call_func("get-successors \'$rxn \'$pwy");
+}
+
+sub nonspecific_forms_of_rxn {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("nonspecific-forms-of-rxn \'$rxn");
+}
+
+sub pathway_hole_p {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func_that_returns_boolean("pathway-hole-p \'$rxn");
+}
+
+sub reaction_reactants_and_products {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("reaction-reactants-and-products \'$rxn");
+}
+
+sub reaction_type {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("reaction-type \'$rxn");
+}
+
+sub rxn_in_compartment_p {
+my $self = shift;
+my $rxn = shift;
+my $compartments = shift;
+return $self -> call_func_that_returns_boolean("rxn-in-compartment-p \'$rxn \'$compartments");
+}
+
+sub rxn_present_p {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func_that_returns_boolean("rxn-present? \'$rxn");
+}
+
+sub rxn_specific_form_of_rxn_p {
+my $self = shift;
+my $specific_rxn = shift;
+my $generic_rxn = shift;
+return $self -> call_func_that_returns_boolean("rxn-specific-form-of-rxn-p \'$specific_rxn \'$generic_rxn");
+}
+
+sub rxn_w_isozymes_p {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func_that_returns_boolean("rxn-w-isozymes-p \'$rxn");
+}
+
+sub rxn_without_sequenced_enzyme_p {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func_that_returns_boolean("rxn-without-sequenced-enzyme-p \'$rxn");
+}
+
+sub specific_forms_of_rxn {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("specific-forms-of-rxn \'$rxn");
+}
+
+sub substrates_of_reaction {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("substrates-of-reaction \'$rxn");
+}
+
+sub transported_chemicals {
+my $self = shift;
+my $rxn = shift;
+return $self -> call_func("transported-chemicals \'$rxn");
+}
+
+# Operations on Regulation Frames
+
+sub DNA_binding_sites_of_protein {
+my $self = shift;
+my $tf = shift;
+return $self -> call_func("DNA-binding-sites-of-protein \'$tf");
+}
+
+sub activation_p {
+my $self = shift;
+my $reg_frame = shift;
+return $self -> call_func_that_returns_boolean("activation-p \'$reg_frame");
+}
+
+sub binding_site_>regulators {
+my $self = shift;
+my $bsite = shift;
+return $self -> call_func("binding-site->regulators \'$bsite");
+}
+
+sub binding_site_promoters {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("binding-site-promoters \'$tu");
+}
+
+sub binding_site_transcription_units {
+my $self = shift;
+my $promoter = shift;
+return $self -> call_func("binding-site-transcription-units \'$promoter");
+}
+
+sub binding_sites_affecting_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("binding-sites-affecting-gene \'$gene");
+}
+
+sub chromosome_of_operon {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("chromosome-of-operon \'$tu");
+}
+
+sub containing_chromosome {
+my $self = shift;
+my $site = shift;
+return $self -> call_func("containing-chromosome \'$site");
+}
+
+sub containing_tus {
+my $self = shift;
+my $site = shift;
+return $self -> call_func("containing-tus \'$site");
+}
+
+sub direct_activators {
+my $self = shift;
+my $x = shift;
+return $self -> call_func("direct-activators \'$x");
+}
+
+sub direct_inhibitors {
+my $self = shift;
+my $x = shift;
+return $self -> call_func("direct-inhibitors \'$x");
+}
+
+sub direct_regulators {
+my $self = shift;
+my $x = shift;
+return $self -> call_func("direct-regulators \'$x");
+}
+
+sub genes_regulated_by_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("genes-regulated-by-gene \'$gene");
+}
+
+sub genes_regulated_by_protein {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("genes-regulated-by-protein \'$protein");
+}
+
+sub genes_regulating_gene {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("genes-regulating-gene \'$gene");
+}
+
+sub inhibition_p {
+my $self = shift;
+my $reg_frame = shift;
+return $self -> call_func_that_returns_boolean("inhibition-p \'$reg_frame");
+}
+
+sub promoter_binding_sites {
+my $self = shift;
+my $promoter = shift;
+return $self -> call_func("promoter-binding-sites \'$promoter");
+}
+
+sub regulation_frame_transcription_units {
+my $self = shift;
+my $reg_frame = shift;
+return $self -> call_func("regulation-frame-transcription-units \'$reg_frame");
+}
+
+sub regulator_of_type_p {
+my $self = shift;
+my $protein = shift;
+my $class = shift;
+return $self -> call_func_that_returns_boolean("regulator-of-type? \'$protein \'$class");
+}
+
+sub regulator_proteins_of_transcription_unit {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("regulator-proteins-of-transcription-unit \'$tu");
+}
+
+sub regulators_of_gene_transcription {
+my $self = shift;
+my $gene = shift;
+return $self -> call_func("regulators-of-gene-transcription \'$gene");
+}
+
+sub regulators_of_operon_transcription {
+my $self = shift;
+my $operon_list = shift;
+return $self -> call_func("regulators-of-operon-transcription \'$operon_list");
+}
+
+sub regulon_of_protein {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("regulon-of-protein \'$protein");
+}
+
+sub transcription_factor_active_forms {
+my $self = shift;
+my $tfs = shift;
+return $self -> call_func("transcription-factor-active-forms \'$tfs");
+}
+
+sub transcription_factor_ligands {
+my $self = shift;
+my $tfs = shift;
+my $mode = shift;
+return $self -> call_func("transcription-factor-ligands \'$tfs \'$mode");
+}
+
+sub transcription_factor_p {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func_that_returns_boolean("transcription-factor? \'$protein");
+}
+
+sub transcription_unit_activation_frames {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-activation-frames \'$tu");
+}
+
+sub transcription_unit_activators {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-activators \'$tu");
+}
+
+sub transcription_unit_all_components {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-all-components \'$tu");
+}
+
+sub transcription_unit_binding_sites {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-binding-sites \'$tu");
+}
+
+sub transcription_unit_first_gene {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-first-gene \'$tu");
+}
+
+sub transcription_unit_genes {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-genes \'$tu");
+}
+
+sub transcription_unit_inhibition_frames {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-inhibition-frames \'$tu");
+}
+
+sub transcription_unit_inhibitors {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-inhibitors \'$tu");
+}
+
+sub transcription_unit_mrna_binding_sites {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-mrna-binding-sites \'$tu");
+}
+
+sub transcription_unit_promoter {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-promoter \'$tu");
+}
+
+sub transcription_unit_regulation_frames {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-regulation-frames \'$tu");
+}
+
+sub transcription_unit_terminators {
+my $self = shift;
+my $operon = shift;
+return $self -> call_func("transcription-unit-terminators \'$operon");
+}
+
+sub transcription_unit_transcription_factors {
+my $self = shift;
+my $tu = shift;
+return $self -> call_func("transcription-unit-transcription-factors \'$tu");
+}
+
+sub transcription_units_of_promoter {
+my $self = shift;
+my $promoter = shift;
+return $self -> call_func("transcription-units-of-promoter \'$promoter");
+}
+
+sub transcription_units_of_protein {
+my $self = shift;
+my $protein = shift;
+return $self -> call_func("transcription-units-of-protein \'$protein");
+}
+
