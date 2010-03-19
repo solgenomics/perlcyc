@@ -582,6 +582,17 @@ sub get_name_string {
 }
 
 
+
+
+
+
+
+
+
+
+
+# todo
+
 sub all_orgs {
     my $self=shift;
     return $self -> call_func("all-orgs"); 
@@ -604,7 +615,6 @@ sub substrates_of_reaction {
     return $self -> call_func("substrates-of-reaction \'$reaction");
 }
 
-#hypothetical function that may not exist
 sub products_of_reaction {
   my $self = shift;
   my $reaction = shift;
@@ -888,7 +898,7 @@ sub create_class {
     foreach my $ds (@direct_supers) { 
 	$supers .= " \'$ds";
     }
-    if (@direct_supers > 1) { 
+   if (@direct_supers > 1) { 
 	$supers = "(".$supers.")";
     }
     
@@ -986,6 +996,29 @@ sub direct_inhibitors {
     my $entity = shift;
     return $self->call_func("direct-inhibitors \'$entity");
 }
+
+
+
+
+
+
+# TODO #
+## internal functions ##
+
+sub parse_opt_args {
+# will check which arguments are valid and return them in lisp format  
+}
+
+sub perl_to_list {
+# converts function names from perl to list
+}
+
+
+
+
+
+
+
 
 
 # Debugging functions
@@ -1171,7 +1204,8 @@ references are supported.
    direct-activators
    direct-inhibitors
 
-
+   added 01/2010:
+   
 
   not supported:
    get_frames_matching_value (why not?)
