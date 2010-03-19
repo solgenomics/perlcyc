@@ -1,0 +1,688 @@
+1. Operations on Frames
+
+get-frame-in-kb  thing &key kb error-p kb-local-only-p
+
+This function returns two values. The second value is t iff: thing is either a symbol that names a frame in kb, or thing is a frame object for a frame in kb, or thing is a frame handle for a frame in kb. In all cases we verify that the frame does in fact reside in kb. Otherwise, the second value is nil (unless error-p is t, in which case the function signals an error because thing is not a valid frame in kb).
+
+When the second value is t, the first value is the frame object for thing (or the name of thing, for FRSs that do not support frame objects). When the second value is nil, the first value is also nil.
+
+frame-in-kb-p  thing &key kb kb-local-only-p
+
+This function returns t when thing is a frame name, a frame object, or a frame handle, for a frame in kb. Frame-in-kb-p  is equivalent to:
+
+    (nth-value 1 (get-frame-in-kb thing :kb kb))
+coerce-to-frame  thing &key kb error-p kb-local-only-p
+
+This function coerces thing to be a frame object, if such objects exist for the underlying FRS. Thing can be a frame name, a frame object, or a frame handle. However, this function is less careful than is get-frame-in-kb  about ensuring that the frame of thing is actually in kb when the supplied thing is a frame object. It verifies that thing is the appropriate type of frame object for kb, but not that the frame actually resides in kb. Therefore, this function will be faster than is get-frame-in-kb  for some FRSs.
+
+This function returns two values. If thing is a frame object of the appropriate type for kb, then this function returns thing and t. Else, if thing is a symbol naming a frame in kb, or a frame handle for a frame in kb, then this function returns the associated frame object and t. Else, this function returns nil for both values (unless error-p is t, in which case the function signals an error because thing is not coercible to a frame).
+
+coercible-to-frame-p  thing &key kb kb-local-only-p
+
+This function returns t when thing is either a frame object, or the name of a frame in kb, or the handle of a frame in kb, and is equivalent to:
+
+    (nth-value 1 (coerce-to-frame thing :kb kb :error-p nil))
+frame-eql  frame-1 frame-2 &key kb kb-local-only-p
+
+This function returns t iff frame-1 and frame-2 identify the same frame in kb. Frame-1 and frame-2 may be any mixture of frame names, frame objects, or frame handles.
+
+frame-object-p  thing &key kb kb-local-only-p
+
+This operation returns t iff thing is a frame object for the FRS specified by kb. This operation only implements a type check, so thing need not actually be in kb (see frame-in-kb-p ). In the case where frame objects are actually symbols, and thing is a symbol corresponding to a valid frame, the operation should return t. more
+
+get-frame-named  frame-name &key kb error-p kb-local-only-p
+
+Returns the frame object for the frame in kb whose name is the symbol, frame, or frame handle frame-name. If the underlying FRS does not support frame objects, then the symbol or handle that names the frame is returned. Error-p affects the behavior of the function when frame-name is not the name of a frame; the function returns nil when error-p is nil rather than signaling an error.
+
+get-frame-labeled  label &key kb error-p kb-local-only-p
+
+Intuitively, this function is meant to be used by a user interface program to return a set of frames that match a label or a frame name. This function is useful for FRSs that associate additional labels besides the frame-name symbol with a frame. Although there is exactly one unique frame-name symbol per frame, a given frame may have multiple labels, and those labels need not be unique within a KB. The mapping from labels to frames is implemented by FRS-specific software, such as a hash table, in a manner that GFP does not specify. Labels may be useful to associate a human-readable string with a frame, or when we wish to associate several synonymous labels with a frame. There is a many-to-many mapping from frames to labels.
+
+The parameter label can be a frame-name symbol, or a frame handle, or a frame object, or a label string.
+
+Get-frame-labeled  returns a list of the one or more frame objects (or the frame handle or frame name for systems that do not support frame objects) matched by label.
+
+Otherwise:
+
+When error-p is true, the function signals an error.
+If error-p is nil, then the function returns a list of the one or more frames that match label (the list will contain more than one frame if label ambiguously matches several frames). If label does not match any frames, then the operation returns nil.
+get-frame-name  frame &key kb error-p kb-local-only-p
+
+Returns a symbol that is the name of the frame identified by frame, which can be either a symbol or a frame object. Error-p affects the behavior of the function when frame is not a valid frame; the function returns nil when error-p is nil rather than signaling an error.
+
+get-frame-handle  frame &key kb error-p kb-local-only-p
+
+Returns a handle that uniquely identifies the frame argument. The value returned may well be a symbol, such as the frame's name, but is required only to be a data structure that can be compared with other frame handles using EQL comparison, and that can be used to select a frame using get-frame-named . The frame argument can be either a symbol, a frame handle or a frame object. Error-p affects the behavior of the function when frame is not a valid frame; the function returns nil when error-p is nil rather than signaling an error.
+
+get-frame-pretty-name  frame &key kb error-p kb-local-only-p
+
+Returns a string that is a pretty name for frame, meaning the name is suitable for use within a user interface. The default GFP methods return the frame name. Error-p affects the behavior of the function when frame is not a valid frame; the function returns nil when error-p is nil rather than signaling an error.
+
+get-frame-type  thing &key kb error-p kb-local-only-p
+
+When thing is a frame or name of a frame, returns either :class or :instance depending on the type of the frame. Error-p affects the behavior of the function when thing is not a valid frame; the function returns nil when error-p is nil rather than signaling an error.
+
+copy-frame  frame new-name &key kb new-kb kb-local-only-p
+
+Copies frame, which resides in kb, to a frame whose name is given by the symbol new-name. The new frame will reside in new-kb, which defaults to kb. The new frame will be created with the same parent classes as the old frame, therefore, an error will occur if the frame is copied to a different KB but the parent classes do not exist in that KB.
+
+create-frame  name &key direct-types direct-supers doc template-slots template-facets own-slots own-facets kb error-p
+
+Creates a new frame with the name name, which is a symbol. Direct-types is a list of class frames (symbols or frame objects) of which this new frame is a direct instance. Direct-supers is a list of class frames of which the new frame is a direct sub. If this list is non-null then the new frame is a class frame. To specify a root class for a KB - a class without any superclasses - use '(:CLASS) for the direct-types. Doc is a string documenting this frame.
+
+Template-slots and own-slots each take a list of slot specifications. A slot specification assigns a set of values to a slot. The syntax of a slot specification is (slot-name slot-value*), where slot-name is a symbol naming a slot and slot-value is a Lisp object suitable as a value of the specified slot. Template slots are only allowed for class frames.
+
+Template-facets and own-facets each take a list of facet specifications, which can assign a set of facet values. A facet specification has the form (slot-name [(facet-name facet-value*)]*), where slot-name is a symbol naming a slot, facet-name is a symbol naming a facet, and facet-value is a Lisp object suitable as a value of the specified facet. Template facets are only allowed for class frames.
+
+KB is a KB name or object. Error-p defaults to nil; if it is nil and the frame already exists, then the specified relation and slot information is asserted for the frame, otherwise an error condition is signalled.
+
+rename-frame  frame new-frame &key kb kb-local-only-p
+
+Changes the name of frame to be the symbol new-frame.
+
+delete-frame  frame &key kb recursive-delete? kb-local-only-p
+
+Deletes frame from kb. When recursive-delete? is t, the function recursively deletes all direct subs and direct instances of frames that have no direct-supers or direct templates other than frame. This function does not signal an error if frame does not exist.
+
+print-frame  thing &key kb stream kb-local-only-p
+
+Prints an ASCII representation to stream of the frame thing or the frame named thing. A warning is printed when thing is neither a valid frame or frame name.
+
+1.1 Operations on Classes
+
+create-class  name direct-supers &key kb primitive-p template-slots template-facets own-slots own-facets kb-local-only-p
+
+This function creates a class called name as a direct subclass of the list of frames direct-supers. For FRSs that support the distinction between primitive and nonprimitive concepts, primitive-p determines the primitiveness of the created class (default is t). The parameters template-slots, template-facets, own-slots and own-facets have the same meaning as for create-frame .
+
+class-p  thing &key kb kb-local-only-p
+
+Returns true in both of the following cases, otherwise returns nil. Case 1: thing is a frame object of the type appropriate for kb and thing is a class frame. The frame may or may not be in kb. Case 2: thing is a symbol that identifies a frame in kb that is a class frame.
+
+Note that CLOS function instance-p returns true for any CLOS object, including CLOS classes. In contrast, gfp:instance-p and gfp:class-p will only both return t when applied to the same frame if that frame is both an instance (a direct-instance of a class that is not a class of classes) and a class (a direct-instance of a class that is a class of classes, such as :CLASS).
+
+get-class-direct-subs  class &key kb kb-local-only-p
+
+Returns a list of the direct subs of class.
+
+get-class-all-subs  class &key kb kb-local-only-p
+
+Returns a list of the all-subs of class.
+
+get-class-direct-supers  class &key kb kb-local-only-p
+
+Returns a list of the direct supers of class.
+
+get-class-all-supers  class &key kb kb-local-only-p
+
+Returns a list of the all-supers of class.
+
+get-class-direct-instances  class &key kb kb-local-only-p
+
+Returns a list of the direct-instances of class.
+
+get-class-all-instances  class &key kb kb-local-only-p
+
+Returns a list of the all-instances of class.
+
+class-all-sub-of-p  sub super &key kb kb-local-only-p
+
+Returns true if class sub is a subclass of class super.
+
+class-direct-sub-of-p  sub super &key kb kb-local-only-p
+
+Returns true if class sub is a direct subclass of class super.
+
+class-all-super-of-p  super sub &key kb kb-local-only-p
+
+Returns true if class sub is a subclass of class super.
+
+class-direct-super-of-p  super sub &key kb kb-local-only-p
+
+Returns true if class sub is a direct subclass of class super.
+
+class-direct-type-of-p  class instance &key kb kb-local-only-p
+
+Returns true if instance is a direct instance of class class.
+
+class-all-type-of-p  class instance &key kb kb-local-only-p
+
+Returns true if instance is an all-instance of class.
+
+primitive-p  class &key kb kb-local-only-p
+
+Returns true iff class is a class whose definition is primitive. For FRSs that do not support classification (that is, FRSs that do not distinguish primitive from defined classes), we stipulate that primitive-p  must return t for all classes.
+
+equivalent-p  class1 class2 &key kb kb-local-only-p
+
+Return t if the definitions of class1 and class2 are equivalent, i.e., the extension of these two classes are the same.
+
+consistent-classes-p  class1 class2 &key kb kb-local-only-p
+
+Returns true when the definitions of class1 and class2 are consistent in the sense that an instance could satisfy the definitions of both frames simultaneously.
+
+class-disjoint-p  class1 class2 &key kb kb-local-only-p
+
+Returns true if class1 and class2 are mutually incompatible, i.e., if no instance could simultaneously satisfy the definition of both classes.
+
+most-specific-classes  class-list &key kb kb-local-only-p
+
+Given a list of classes, this function returns the most specific members of the list. For example, given the list (a b c), it would remove class a from the list if a subsumed b.
+
+most-general-classes  class-list &key kb kb-local-only-p
+
+Given a list of classes, this function returns the most general members of the list. For example, given the list (a b c), it would remove class a from the list if a was subsumed by b.
+
+remove-redundant-classes  class-list &key kb kb-local-only-p
+
+Given a list of classes, this function returns the minimal nonredundant members of the list. For example, given the list (a b c), it would remove a from the list if a was equivalent to b.
+
+put-class-supers  class new-supers &key kb kb-local-only-p
+
+Changes class to be a subclass of all the classes listed in new-supers.
+
+get-kb-classes  &key kb kb-local-only-p
+
+Returns the list of class frames in the KB. If kb-local-only-p is true, the list returned will contain only the classes defined in kb itself, and classes that might have been inherited from other (included) KBs will not be included.
+
+mapcar-kb-classes  function &key kb kb-local-only-p
+
+Maps function over all classes in the current KB. If kb-local-only-p is true, the mapping will be performed over only the classes defined in kb itself, and classes that might have been inherited from other (included) KBs will be ignored. Generally speaking, GFP functions whose names begin with mapc- always return nil, whereas functions whose names begin with mapcar- always return a list of the results of the map operations.
+
+mapc-kb-classes  function &key kb kb-local-only-p
+
+Maps function over all classes in the current KB. If kb-local-only-p is true, the mapping will be performed over only the classes defined in kb itself, and classes that might have been inherited from other (included) KBs will be ignored. Generally speaking, GFP functions whose names begin with mapc- always return nil, whereas functions whose names begin with mapcar- always return a list of the results of the map operations.
+
+do-kb-classes  (var &key kb kb-local-only-p) &body body Macro
+
+Iteratively binds var to every class in kb, and executes body under those bindings. If kb-local-only-p is true, the iteration will be performed over only the classes defined in kb itself, and classes that might have been inherited from other (included) KBs will be ignored.
+
+mapcar-class-direct-subs  function class &key kb kb-local-only-p
+
+Maps function over the direct subclasses of class.
+
+mapc-class-direct-subs  function class &key kb kb-local-only-p
+
+Maps function over the direct subclasses of class.
+
+do-class-direct-subs  (var class &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body with var bound to a different direct subclass of class on each iteration.
+
+mapcar-class-direct-supers  function class &key kb kb-local-only-p
+
+Maps function over the direct superclasses of class.
+
+mapc-class-direct-supers  function class &key kb kb-local-only-p
+
+Maps function over the direct superclasses of class.
+
+do-class-direct-supers  (var class &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body with var bound to a different direct superclass of class on each iteration.
+
+mapcar-class-direct-instances  function class &key kb kb-local-only-p
+
+Maps function over the direct instances of class.
+
+mapc-class-direct-instances  function class &key kb kb-local-only-p
+
+Maps function over the direct instances of class.
+
+do-class-direct-instances  (var class &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body with var bound to a different direct instance of class on each iteration.
+
+mapcar-class-all-subs  function class &key kb kb-local-only-p
+
+Maps function over the subclasses of class.
+
+mapc-class-all-subs  function class &key kb kb-local-only-p
+
+Maps function over the subclasses of class.
+
+do-class-all-subs  (var class &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body for all of the subclasses of class, with var bound to a different subclass for each iteration.
+
+mapcar-class-all-supers  function class &key kb kb-local-only-p
+
+Maps function over the superclasses of class.
+
+mapc-class-all-supers  function class &key kb kb-local-only-p
+
+Maps function over the superclasses of class.
+
+do-class-all-supers  (var class &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body for all of the superclasses of class, with var bound to a different superclass for each iteration.
+
+mapcar-class-all-instances  function class &key kb kb-local-only-p
+
+Maps function over the instances of class.
+
+mapc-class-all-instances  function class &key kb kb-local-only-p
+
+Maps function over the instances of class.
+
+do-class-all-instances  (var class &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body for all of the instances of class, with var bound to a different instance for each iteration.
+
+1.2 Operations on Instances
+
+instance-p  thing &key kb kb-local-only-p
+
+Returns true in both of the following cases, otherwise returns nil. Case 1: thing is a frame object of the type appropriate for kb and thing is an instance frame. The frame may or may not be in kb. Case 2: thing is a symbol that identifies a frame in kb that is an instance frame.
+
+Note that CLOS function instance-p Returns true for any CLOS object, including CLOS classes. In contrast, gfp:instance-p and class-p will only both return t when applied to the same frame if that frame is both an instance (a direct-instance of a class that is not a class of classes) and a class (a direct-instance of a class that is a class of classes, such as :CLASS).
+
+create-instance  name direct-types &key kb error-p own-slots own-facets kb-local-only-p
+
+Creates an instance frame whose name is given by the symbol name. The one or more classes that are direct types of the instance are given by direct-types, which may be an atom or a list. This function returns the new instance frame. Error-p affects the behavior of the function when a frame called name already exists; the function deletes the existing frame when error-p is nil rather than signaling an error. The parameters own-slots and own-facets have the same meaning as for create-frame .
+
+get-instance-direct-types  instance &key kb kb-local-only-p
+
+Returns a list of the direct types of instance.
+
+get-instance-all-types  instance &key kb error-p kb-local-only-p
+
+Returns a list of the all-types of instance.
+
+mapcar-instance-direct-types  instance function &key kb kb-local-only-p
+
+Maps function over the direct types of instance.
+
+mapc-instance-direct-types  instance function &key kb kb-local-only-p
+
+Maps function over the direct types of instance.
+
+do-instance-direct-types  (var instance &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body with var bound to a different direct type of instance on each iteration.
+
+mapcar-instance-all-types  instance function &key kb kb-local-only-p
+
+Maps function over the types of instance.
+
+mapc-instance-all-types  instance function &key kb kb-local-only-p
+
+Maps function over the types of instance.
+
+do-instance-all-types  (var instance &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body for all of the types of instance, with var bound to a different type for each iteration.
+
+2. Slot-Access Functions
+
+2.1 Slot Enumeration
+
+get-frame-slots  frame &key kb slot-filter slot-type kb-local-only-p
+
+Returns the list of instance or template slots that are associated with frame. Slot-type must be :template, :own, or :all and defaults to :all.
+
+Slot-filter is an atomic keyword or a predicate that further restricts the subset of the slots defined for frame that are returned, as follows:
+
+:local-info -- selects slots for which values are stored in this frame. We do not distinguish between two possible interpretations of ``local values:'' values that were asserted to hold for this frame rather than inherited from its parent, and, values that were inherited from its parent and cached at this frame. Therefore, if either condition is true for a given slot, it should be selected under this option.
+:all (the default) -- all slots of the given type that could possibly have values for frame. The set of relevant slots may be determined heuristically by the FRS, but must include all slots that actually do have values by direct assertion or inheritance, or for which there are slot constraints.
+a predicate P that takes three arguments, frame, slot, and kb. Slots are selected as for :all, and P is applied to each slot. Slots for which P is non-nil are returned.
+get-frame-facets  frame &key kb slot-type slot-filter kb-local-only-p
+
+Returns the list of facets on instance or template slots that are associated with frame. Slot-type must be :template, :own, or :all and defaults to :all.
+
+Slot-filter is an atomic keyword or a predicate that further restricts the subset of the slots defined for frame that are returned, as follows:
+
+:local-info -- selects facets on slots for which values are stored in this frame. We do not distinguish between two possible interpretations of ``local values:'' values that were asserted to hold for this frame rather than inherited from its parent, and, values that were inherited from its parent and cached at this frame. Therefore, if either condition is true for a given slot, it should be selected under this option.
+:all (the default) -- facets on all slots of the given type that could possibly have values for frame. The set of relevant slots may be determined heuristically by the FRS, but must include all slots that actually do have values by direct assertion or inheritance, or for which there are slot constraints.
+a predicate on slots to check for facets P that takes three arguments, frame, slot, and kb. Slots are selected as for :all, and P is applied to each slot. Facets on slots for which P is non-nil are returned.
+put-instance-types  instance new-types &key kb kb-local-only-p
+
+Changes instance to be an instance of all the classes listed in new-types.
+
+get-own-slots  frame &key kb which-slots
+
+mapcar-frame-slots  frame function &kb kb (slot-filter :all) (slot-type :auto) kb-local-only-p
+
+Apply function over all slots in a frame. The function should take a single argument, the symbol naming the slot. Both own and template slots are included, and no filters are applied.
+
+mapc-frame-slots  frame function &key kb (slot-filter :all) (slot-type :auto) kb-local-only-p
+
+Apply function over all slots in a frame. The function should take a single argument, the symbol naming the slot. Both own and template slots are included, and no filters are applied.
+
+do-frame-slots  (var frame &key kb (slot-filter :all) (slot-type :auto) kb-local-only-p) &body body Macro
+
+Repeatedly executes body; on each repetition, var is bound to a different slot (a symbol) in the specified frame.
+
+slot-type  frame slot-name &key kb kb-local-only-p
+
+Returns a value in the set {:own, :template, nil}. If the slot named by slot-name is an own slot in frame, then :own is returned. If frame has a template slot of the supplied name, but no own slot of that name then :template is returned. If there is both an own and a template slot named slot-name in frame, then :own is returned. This means that (slot-type frame slot-name) as the value to the slot-type keyword argument of any GFP function will result in the equivalent semantics to those provided by the :auto keyword. If no slot named slot-name is identifiable in frame then nil is returned.
+
+get-slot-type  frame slot &key kb
+
+2.2 Operations on Slot Values
+
+get-slot-values  frame slot &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+
+This function returns the entire set of values of own slot slot within frame, in no guaranteed order. It always returns a list of slot values. If the specified slot has no values, a null list is returned.
+
+local-only-p is a filter on the slot values returned. If this argument is non-NIL, then only those values that have been asserted explicitly for this slot are returned. Values that are not local are those that are inferred (e.g., by inheritance or rule firing) or otherwise computed (e.g., by method or demon invocation). In most FRSs, local values can be determined more quickly.
+
+get-slot-value  frame slot &key kb local-only-p (slot-type :auto) kb-local-only-p
+
+This function returns a single arbitrary member of the set of values of the own slot slot. It useful for single valued slots.
+
+get-frame-with-slot-value  frame slot value &key kb local-only-p (slot-type :auto) kb-local-only-p
+
+When called with a putative value of slot in frame, returns the frame in which the slot value was asserted locally, or nil if the system is unable to find the owner of the slot value. No commitment is made about the means by which the slot value was associated with the frame when local-only-p is nil. Any given FRS might use simple class/subclass inheritance to derive the slot value, or some more sophisticated inference. The purpose of this function is to allow user interfaces to take users from a value displayed as a slot value on a particular frame to the place that asserted the value. Many FRSs will not be able to implement this operation, so it is important for client programs not to rely on getting a non-nil result. If the value argument is not in fact a value of the slot in question then the result will be nil.
+
+follow-slot-chain  frame slot-chain &key kb union-multiple-values kb-local-only-p
+
+This function allows one to traverse a chain of slot references, gathering own slot values. For example, imagine that we wish to determine the sisters of the father of the mother of John. The following two calls accomplish this goal:
+
+        (follow-slot-chain 'john '(mother father sisters))
+	
+        (get-slot-values)
+           (get-slot-values
+              (get-slot-values 'john 'mother)
+              'father)
+           'sisters)
+This function is complicated by the fact that slots can have multiple values. For example, imagine that John has two mothers--adopted and biological. If union-multiple-values is nil we signal an error; if T, then the slot chain becomes a tree, and we return the union of all values found at the leaves of the tree.
+
+put-slot-values  frame slot values &key kb (slot-type :auto) kb-local-only-p
+
+This function sets the value of own slot slot in frame to be values, which is assumed to be a set. The order of the elements of values will not necessarily be maintained by the FRS. This function may signal constraint violation conditions (see Section 5.2).
+
+put-slot-value  frame slot value &key kb (slot-type :auto) kb-local-only-p
+
+This sets the value of slot in frame to be a set consisting of a single element: value. This function may signal constraint violation conditions (see Section 5.2).
+
+add-slot-value  frame slot value &key kb test (slot-type :auto) add-after kb-local-only-p
+
+value is added to the set of values of slot. If the collection-type of slot is :set, then value is added only if slot does not already contain value. add-after, if supplied, should be an integer between 0 and the number of existing values, inclusive. If the collection-type of slot is :list, value is added immediately after the value indexed by add-after. For example, if add-after is 1, the new value will be added between the first and second old values. If add-after is not supplied, and the collection-type of slot is :list, then value is added to the front of the list. This function may signal constraint violation conditions (see Section 5.2).
+
+replace-slot-value  frame slot old-value new-value &key kb test (slot-type :auto) (index :all) kb-local-only-p.
+
+If old-value is currently a member of the set of local values of slot, then old-value is replaced by new-value in slot. If index is :all then all occurrences of old-value will be replaced. Otherwise, index should be an integer index into the values list, and only the value at that position, if it matches old-value, will be replaced (the first value of the slot is index 1). This function may signal constraint violation conditions (see Section 5.2).
+
+remove-slot-value  kb frame slot value &key kb test (slot-type :auto) (index :all) kb-local-only-p
+
+If value is currently a member of the set of local values of slot, then value is removed from the values of slot. If index is :all then all occurrences of value will be removed. Otherwise, index should be an integer index into the values list, and only the value at that position, if it matches value, will be removed (the first value of the slot is index 1).
+
+remove-local-slot-values  frame slot &key kb (slot-type :auto) kb-local-only-p
+
+Removes all local values in slot of frame.
+
+member-slot-value-p  frame slot value &key kb test (slot-type :auto) kb-local-only-p
+
+Returns non-nil iff value is a value in slot of frame, as determined by the predicate test. The predicate test defaults to the default test function for the current frame system.
+
+slot-has-value-p  frame slot &key kb (slot-type :auto) kb-local-only-p
+
+Returns true iff own slot slot of frame has some value, local or nonlocal.
+
+slot-p  frame thing &key kb slot-type kb-local-only-p
+
+Returns true iff thing is a valid slot in frame.
+
+create-slot  name attach-to &key kb create-p slot-type error-p kb-local-only-p
+
+Creates a slot name in the frame(s) specified by attach-to, which can be either a single frame or a list of frames. If create-p is t (the default), a slot frame object is created for the new slot.
+
+delete-slot  slot &key kb delete-values-p kb-local-only-p
+
+Deletes the slot frame. If delete-values-p is t (the default), all values for the slot in all frames are deleted.
+
+rename-slot  slot new-name &key kb kb-local-only-p
+
+mapcar-slot-values  frame slot function &key kb (local-only-p nil) (slot-type :auto) (number-of-values :all) (kb-local-only-p t)
+
+Map function over every value in the specified slot.
+
+mapc-slot-values  frame slot function &key kb (local-only-p nil) (slot-type :auto) (number-of-values :all) (kb-local-only-p t)
+
+Map function over every value in the specified slot.
+
+do-slot-values  (var frame slot &key kb (local-only-p nil) (slot-type :auto) (number-of-values :all) kb-local-only-p) &body body Macro
+
+Repeatedly executes body; on each repetition, var is bound to a different value in the specified slot.
+
+3. Facet Functions
+
+create-facet  name frame slot &key kb create-p (slot-type :auto) kb-local-only-p
+
+Creates a facet called name that can be applied to instances of frame if slot-type resolves to :template, or to frame if slot-type resolves to :own. If frame is nil the facet's frame domain is unconstrained. If slot is nil the slot domain of the facet is unconstrained.
+
+get-facet-values  frame slot facet &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+
+This function returns the entire set of values of the specified facet, in no guaranteed order. It always returns a list of values.
+
+get-facet-value  frame slot facet &key kb local-only-p (slot-type :auto) kb-local-only-p
+
+This function returns a single arbitrary member of the set of values of the specified facet. It is most commonly used when that set is expected to have one member.
+
+get-frame-with-facet-value  frame slot facet value &key kb local-only-p (slot-type :auto) kb-local-only-p
+
+When called with a putative value of facet in slot in frame, returns the frame in which the facet value was asserted locally, or nil if the system is unable to find the owner of the facet value. No commitment is made about the means by which the facet value was associated with the frame when local-only-p is nil. Any given FRS might use simple class/subclass inheritance to derive the facet value, or some more sophisticated inference. The purpose of this function is to allow user interfaces to take users from a value displayed as a facet value on a particular frame to the place that asserted the value. Many FRSs will not be able to implement this operation, so it is important for client programs not to rely on getting a non-nil result. If the value argument is not in fact a value of the facet in question then the result will be nil.
+
+put-facet-values  frame slot facet values &key kb (slot-type :auto) kb-local-only-p
+
+This function sets the value of the specified facet to be values, which is assumed to be a set. The order of the elements of values will not necessarily be maintained by the FRS.
+
+put-facet-value  frame slot facet value &key kb (slot-type :auto) kb-local-only-p
+
+This sets the value of the specified facet to be a set consisting of a single element: value.
+
+add-facet-value  frame slot facet value &key kb test (slot-type :auto) kb-local-only-p
+
+If the specified facet does not already contain value, then value is added to the set of values of the facet.
+
+replace-facet-value  frame slot facet old-value new-value &key kb test (slot-type :auto) kb-local-only-p
+
+If old-value is currently a member of the set of values of the specified facet, then old-value is replaced by new-value in the the facet.
+
+remove-facet-value  kb frame slot facet value &key kb test (slot-type :auto) kb-local-only-p
+
+If value is currently a member of the set of values of the specified facet, then value is removed from the values of the facet.
+
+remove-local-facet-values  frame slot facet &key kb (slot-type :auto) kb-local-only-p
+
+Removes all values stored locally in the specified facet.
+
+member-facet-value-p  frame slot facet value &key kb test kb-local-only-p
+
+Returns non-nil iff value is a value in the specified facet.
+
+facet-has-value-p  frame slot facet &key kb kb-local-only-p
+
+Returns true iff the specified facet has a value.
+
+facet-p  frame slot thing &key kb (slot-type :auto) kb-local-only-p
+
+Returns true iff thing is a valid facet in slot of frame. A valid facet either has a value or is defined on some template slot of the same name in a type or superclass of frame.
+
+get-slot-facets  frame slot &key kb local-only-p (slot-type :auto) kb-local-only-p
+
+Returns the list of facets that are associated with slot in frame. A facet is associated with a slot if it has a value for that slot or is defined on some template slot of the same name in a type or super of frame. If local-only-p is non-NIL, then only the local facets of the slot are returned. Local facets are those which can be retrieved by the FRS without performing inference (e.g., inheritance or rule firing); local values are asserted explicitly by a user or application.
+
+mapcar-facet-values  frame slot facet function &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+
+Map function over every value in the specified facet.
+
+mapc-facet-values  frame slot facet function &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+
+Map function over every value in the specified facet.
+
+do-facet-values  (var frame slot facet &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p) &body body Macro
+
+Repeatedly executes body; on each repetition, var is bound to a different value in the specified facet.
+
+mapcar-slot-facets  frame slot function &key kb local-only-p (slot-type :auto) kb-local-only-p
+
+Map function over all facets in slot of frame.
+
+mapc-slot-facets  frame slot function &key kb local-only-p (slot-type :auto) kb-local-only-p
+
+Map function over all facets in slot of frame.
+
+do-slot-facets  (var frame slot &key kb local-only-p (slot-type :auto) kb-local-only-p) &body body Macro
+
+Repeatedly executes body; on each repetition, var is bound to a different facet in the specified slot.
+
+4. Knowledge Base Operations
+
+create-kb  name &key (prototype (class-prototype (class-of (current-kb)))) initargs
+
+Creates a new KB descriptor (see Section 3.4) for an empty knowledge base of the same class as the value of prototype; that CLOS class identifies the underlying FRS that will be used to manipulate the KB. Example classes include theo-kb and loom-kb. Note that the name of this operation is potentially confusing because it creates a new in memory descriptor of a KB; it does not create a knowledge base on external storage. This operation must be called as the first step of accessing any knowledge base, whether that knowledge base already exists, or not.
+
+initargs is a list of initializations in the normal init-plist format. These arguments are used in the initialization of the knowledge base. The implementation of create-kb is not specified and the user cannot, therefore rely on any underlying CLOS protocol, such as initialize-instance, make-instance, or shared-initialize being invoked.
+
+Implementation note: It is the responsibility of each implementation to maintain its own list of KBs. Any KB created with create-kb  must be findable by the user using either find-kb , or find-kb-of-type 
+
+delete-kb   &key kb
+
+This function erases the KB associated with kb from secondary storage. The persistent version of KB is destroyed. This operation may only be applied to KBs in the live state.
+
+open-kb  &key filename status kb force-load-p error-p
+
+Opens a the KB stored in file filename, thereby putting that KB in the open state. Status indicates whether an existing KB should be opened (default value is :old) or a new KB should be created (value :new). Once open, the existing frames in a KB can be accessed, and new frames can be created in a KB. If force-load-p is t (default is nil) then the KB must be immediately loaded into virtual memory in its entirety; otherwise no commitment is made as to whether this function actually loads the KB.
+
+This function takes an argument called kb as returned by create-kb . That is, create-kb  must always be called to create the KB descriptor, before open-kb  is called to actually open the KB associated with that descriptor. The type of the KB argument tells open-kb  what underlying FRS to employ to actually access the KB on secondary storage.
+
+Error-p affects the behavior of the function when no file called filename exists; in this case the function returns nil when error-p is nil\ rather than signaling an error.
+
+close-kb  &key kb save-updates-p flush-memory-p
+
+This operation changes the state of kb from open to live, thereby making its frames inaccessible to other GFP operations. The save-updates-p argument (t by default) determines whether the close operation saves to secondary storage all updates made to the KB since the last open-kb or save-kb operation was applied to the KB. The flush-memory-p argument (t by default) determines whether the close operation erases all frames associated with kb from virtual memory.
+
+save-kb  &key kb
+
+This function saves an open KB to permanent storage in the file from which it was opened. No commitment is made as to whether the KB is resaved in its entirety, or if updates to the KB only are saved.
+
+revert-kb  &key kb error-p
+
+This operation reverts kb to its previously saved state. All changes made to kb since the last save are undone. Kb remains open. The default method for this operation simply closes and then reopens kb. Error-p affects the behavior of the function when kb is not an open KB; the function returns nil when error-p is nil rather than signaling an error.
+
+kb-p  kb
+
+Returns true iff kb is a valid KB name or a KB-descriptor.
+
+find-kb  name-or-kb &key error-p
+
+If name-or-kb is the name or the descriptor of a KB that is currently known to the system, irrespective of the type of the KB, find-kb  returns the KB-descriptor associated with that KB. Error-p affects the behavior of the function when name-or-kb is not a known KB; the function returns nil when error-p is nil rather than signaling an error.
+
+find-kb-of-type  name-or-kb &key (prototype (class-prototype (class-of (current-kb)))) error-p
+
+If name-or-kb is the name or the descriptor of a KB of a type consistent with (subtypep) the specified type that is currently known to the system, find-kb-of-type  returns the KB-descriptor associated with that KB. Error-p affects the behavior of the function when name-or-kb is not a known KB; the function returns nil when error-p is nil rather than signaling an error.
+
+current-kb 
+
+Returns the descriptor associated with the current KB.
+
+with-current-kb  kb &body body
+
+This macro evaluates the forms in body in a context where the current KB for the GFP protocol is kb. Outside the lexical scope of the macro, the macro does not alter the current KB.
+
+with-kb-io-syntax  (var &key kb (purpose :file)) &body body Macro
+
+Binds the I/O environment in which body is executed to be appropriate to the KB and the given purpose. The purpose argument can be one of :file, or :user-interface. This allows KBs to print data to files in a manner that will be readable and hence will probably be package-qualified and slashified, and yet will also allow printing to user interfaces in a prettier manner. Note: this functionality is independent of the pretty-names of frames being displayed by a user interface tool. The bindings established by with-kb-io-syntax will apply, for example, to slot and facet values whether they are frames or not. Back end implementor's note: this macro is implemented in the back-end protocol by implement-with-kb-io-syntax-internal.
+
+goto-kb  kb
+
+Makes kb the current KB.
+
+rename-kb  kb new-name
+
+get-all-kbs 
+
+Returns the list of all of the known KBs, irrespective of the KB's implementation type.
+
+get-kbs  &key (prototype (class-prototype (class-of (current-kb))))
+
+Returns the list of all of the known KBs whose type matches the type of prototype.
+
+get-kb-frames  &key kb kb-local-only-p
+
+Returns the list of frames in the KB, including both classes and instances. If kb-local-only-p is true, the list returned will contain only the classes defined in kb itself; classes that were inherited from other (included) KBs will not be included.
+
+mapcar-kb-frames  function &key kb kb-local-only-p
+
+Maps function over every frame in the specified KB. If kb-local-only-p is true, the mapping will be performed over only the classes defined in kb itself; classes that were inherited from other (included) KBs will be ignored.
+
+mapc-kb-frames  function &key kb kb-local-only-p
+
+Maps function over every frame in the specified KB. If kb-local-only-p is true, the mapping will be performed over only the classes defined in kb itself; classes that were inherited from other (included) KBs will be ignored.
+
+do-kb-frames  (var &key kb kb-local-only-p) &body Macro
+
+Evaluates body repeatedly, with the binding of variable var iterating over every frame in the specified KB. If kb-local-only-p is true, the iteration will be performed over only the classes defined in kb itself; classes that were inherited from other (included) KBs will be ignored.
+
+get-kb-root-classes  &key type kb kb-local-only-p
+
+Every frame KB has one or more class frames at the top (root) of the taxonomic hierarchy. A class C is a root of a KB in K if there exists no frame D such that D is a super of C and D is in the KB K. This function identifies those classes.
+
+Some FRSs allow user-defined classes to be roots of a KB, whereas other FRSs always import certain system-defined classes (which are typically named something like thing) into each KB and force all user classes to be subs of thing. These system-defined classes may normally be invisible to the user in some back ends. The type argument controls which root classes are returned as follows:
+
+type = :all returns all of the true root classes of the KB, regardless of whether they are system defined or user defined.
+type = :user returns the user-defined root classes of the KB, namely all classes C within the KB such that C was defined by a user application as opposed to being a built-in part of every KB, and such that there exists no class D that is both user defined and a super or all-super of C. That is, there may exist system-defined supers of C.
+type = :system returns the subset of the true root classes of the KB that are system defined. This may be none for some FRSs.
+The default type is :all.
+
+If local-only-p is true, the list returned will return only root the classes defined in kb itself; classes that were inherited from other (included) KBs will not be included. This means that a class that has superclasses in some KB included by kb, but has no superclasses defined in kb will be returned as a root class if local-only-p is true.
+
+get-kb-instances  &key kb kb-local-only-p
+
+Returns the list of instance frames in kb. If kb-local-only-p is true, the list returned will contain only the instances defined in kb itself; instances that were inherited from other (included) KBs will not be included.
+
+mapcar-kb-instances  function &key kb kb-local-only-p
+
+Map function over all instances in the current KB. If kb-local-only-p is true, the mapping will be performed over only the instances defined in kb itself; instances that were inherited from other (included) KBs will be ignored.
+
+mapc-kb-instances  function &key kb kb-local-only-p
+
+Map function over all instances in the current KB. If kb-local-only-p is true, the mapping will be performed over only the instances defined in kb itself; instances that were inherited from other (included) KBs will be ignored.
+
+do-kb-instances  (var &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body with var bound to a different instance frame in kb on each iteration. If kb-local-only-p is true, the iteration will be performed over only the instances defined in kb itself; instances that were inherited from other (included) KBs will be ignored.
+
+get-kb-slots  &key kb kb-local-only-p
+
+Returns the list of slots that are defined across all of the frames in kb. If kb-local-only-p is true, the list returned will contain only the slots defined in kb itself; slots that were inherited from other (included) KBs will not be included.
+
+mapcar-kb-slots  function &key kb kb-local-only-p
+
+Map function over all slots in KB. If kb-local-only-p is true, the mapping will be performed over only the slots defined in kb itself; slots that were inherited from other (included) KBs will be ignored.
+
+mapc-kb-slots  function &key kb kb-local-only-p
+
+Map function over all slots in KB. If kb-local-only-p is true, the mapping will be performed over only the slots defined in kb itself; slots that were inherited from other (included) KBs will be ignored.
+
+do-kb-slots  (var &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body with var bound to a different slot in kb on each iteration. If kb-local-only-p is true, the iteration will be performed over only the slots defined in kb itself; classes that were inherited from other (included) KBs will be ignored.
+
+get-kb-facets  &key kb kb-local-only-p
+
+Returns the list of facets that are defined across all of the frames in kb. If kb-local-only-p is true, the list returned will contain only the facets defined in kb itself; facets that were inherited from other (included) KBs will not be included.
+
+mapcar-kb-facets  function &key kb kb-local-only-p
+
+Map function over all facets in KB. If kb-local-only-p is true, the mapping will be performed over only the facets defined in kb itself; facets that were inherited from other (included) KBs will be ignored.
+
+mapc-kb-facets  function &key kb kb-local-only-p
+
+Map function over all facets in KB. If kb-local-only-p is true, the mapping will be performed over only the facets defined in kb itself; facets that were inherited from other (included) KBs will be ignored.
+
+do-kb-facets  (var &key kb kb-local-only-p) &body body Macro
+
+Repeatedly executes body with var bound to a different facet in kb on each iteration. If kb-local-only-p is true, the iteration will be performed over only the facets defined in kb itself; facets that were inherited from other (included) KBs will be ignored.
+
+5. Constraint-Checking
+
+return-type argument are: :boolean meaning meaning when one or more violations occur return t; :string meaning when one or more violations occur return a string explaining the violation(s); and :struct meaning when one or more violation(s) occur return a list of defstructs whose fields explain the violation(s). The default value of return-type is :boolean. If no violation occurs then all constraint-checking functions return nil.
+
+frame-violations  frame &key kb return-type
+
+slot-violations  frame slot &key values kb return-type
+
+
+

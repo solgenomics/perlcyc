@@ -1,0 +1,154 @@
+get-frame-in-kb  thing &key kb error-p kb-local-only-p
+frame-in-kb-p  thing &key kb kb-local-only-p
+coerce-to-frame  thing &key kb error-p kb-local-only-p
+coercible-to-frame-p  thing &key kb kb-local-only-p
+frame-eql  frame-1 frame-2 &key kb kb-local-only-p
+frame-object-p  thing &key kb kb-local-only-p
+get-frame-named  frame-name &key kb error-p kb-local-only-p
+get-frame-labeled  label &key kb error-p kb-local-only-p
+get-frame-name  frame &key kb error-p kb-local-only-p
+get-frame-handle  frame &key kb error-p kb-local-only-p
+get-frame-pretty-name  frame &key kb error-p kb-local-only-p
+get-frame-type  thing &key kb error-p kb-local-only-p
+copy-frame  frame new-name &key kb new-kb kb-local-only-p
+create-frame  name &key direct-types direct-supers doc template-slots template-facets own-slots own-facets kb error-p
+rename-frame  frame new-frame &key kb kb-local-only-p
+delete-frame  frame &key kb recursive-delete? kb-local-only-p
+print-frame  thing &key kb stream kb-local-only-p
+create-class  name direct-supers &key kb primitive-p template-slots template-facets own-slots own-facets kb-local-only-p
+class-p  thing &key kb kb-local-only-p
+get-class-direct-subs  class &key kb kb-local-only-p
+get-class-all-subs  class &key kb kb-local-only-p
+get-class-direct-supers  class &key kb kb-local-only-p
+get-class-all-supers  class &key kb kb-local-only-p
+get-class-direct-instances  class &key kb kb-local-only-p
+get-class-all-instances  class &key kb kb-local-only-p
+class-all-sub-of-p  sub super &key kb kb-local-only-p
+class-direct-sub-of-p  sub super &key kb kb-local-only-p
+class-all-super-of-p  super sub &key kb kb-local-only-p
+class-direct-super-of-p  super sub &key kb kb-local-only-p
+class-direct-type-of-p  class instance &key kb kb-local-only-p
+class-all-type-of-p  class instance &key kb kb-local-only-p
+primitive-p  class &key kb kb-local-only-p
+equivalent-p  class1 class2 &key kb kb-local-only-p
+consistent-classes-p  class1 class2 &key kb kb-local-only-p
+class-disjoint-p  class1 class2 &key kb kb-local-only-p
+most-specific-classes  class-list &key kb kb-local-only-p
+most-general-classes  class-list &key kb kb-local-only-p
+remove-redundant-classes  class-list &key kb kb-local-only-p
+put-class-supers  class new-supers &key kb kb-local-only-p
+get-kb-classes  &key kb kb-local-only-p
+mapcar-kb-classes  function &key kb kb-local-only-p
+mapc-kb-classes  function &key kb kb-local-only-p
+do-kb-classes  (var &key kb kb-local-only-p) &body body Macro
+mapcar-class-direct-subs  function class &key kb kb-local-only-p
+mapc-class-direct-subs  function class &key kb kb-local-only-p
+do-class-direct-subs  (var class &key kb kb-local-only-p) &body body Macro
+mapcar-class-direct-supers  function class &key kb kb-local-only-p
+mapc-class-direct-supers  function class &key kb kb-local-only-p
+do-class-direct-supers  (var class &key kb kb-local-only-p) &body body Macro
+mapcar-class-direct-instances  function class &key kb kb-local-only-p
+mapc-class-direct-instances  function class &key kb kb-local-only-p
+do-class-direct-instances  (var class &key kb kb-local-only-p) &body body Macro
+mapcar-class-all-subs  function class &key kb kb-local-only-p
+mapc-class-all-subs  function class &key kb kb-local-only-p
+do-class-all-subs  (var class &key kb kb-local-only-p) &body body Macro
+mapcar-class-all-supers  function class &key kb kb-local-only-p
+mapc-class-all-supers  function class &key kb kb-local-only-p
+do-class-all-supers  (var class &key kb kb-local-only-p) &body body Macro
+mapcar-class-all-instances  function class &key kb kb-local-only-p
+mapc-class-all-instances  function class &key kb kb-local-only-p
+do-class-all-instances  (var class &key kb kb-local-only-p) &body body Macro
+instance-p  thing &key kb kb-local-only-p
+create-instance  name direct-types &key kb error-p own-slots own-facets kb-local-only-p
+get-instance-direct-types  instance &key kb kb-local-only-p
+get-instance-all-types  instance &key kb error-p kb-local-only-p
+mapcar-instance-direct-types  instance function &key kb kb-local-only-p
+mapc-instance-direct-types  instance function &key kb kb-local-only-p
+do-instance-direct-types  (var instance &key kb kb-local-only-p) &body body Macro
+mapcar-instance-all-types  instance function &key kb kb-local-only-p
+mapc-instance-all-types  instance function &key kb kb-local-only-p
+do-instance-all-types  (var instance &key kb kb-local-only-p) &body body Macro
+get-frame-slots  frame &key kb slot-filter slot-type kb-local-only-p
+get-frame-facets  frame &key kb slot-type slot-filter kb-local-only-p
+put-instance-types  instance new-types &key kb kb-local-only-p
+get-own-slots  frame &key kb which-slots
+mapcar-frame-slots  frame function &kb kb (slot-filter :all) (slot-type :auto) kb-local-only-p
+mapc-frame-slots  frame function &key kb (slot-filter :all) (slot-type :auto) kb-local-only-p
+do-frame-slots  (var frame &key kb (slot-filter :all) (slot-type :auto) kb-local-only-p) &body body Macro
+slot-type  frame slot-name &key kb kb-local-only-p
+get-slot-type  frame slot &key kb
+get-slot-values  frame slot &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+get-slot-value  frame slot &key kb local-only-p (slot-type :auto) kb-local-only-p
+get-frame-with-slot-value  frame slot value &key kb local-only-p (slot-type :auto) kb-local-only-p
+follow-slot-chain  frame slot-chain &key kb union-multiple-values kb-local-only-p
+put-slot-values  frame slot values &key kb (slot-type :auto) kb-local-only-p
+put-slot-value  frame slot value &key kb (slot-type :auto) kb-local-only-p
+add-slot-value  frame slot value &key kb test (slot-type :auto) add-after kb-local-only-p
+replace-slot-value  frame slot old-value new-value &key kb test (slot-type :auto) (index :all) kb-local-only-p.
+remove-slot-value  kb frame slot value &key kb test (slot-type :auto) (index :all) kb-local-only-p
+remove-local-slot-values  frame slot &key kb (slot-type :auto) kb-local-only-p
+member-slot-value-p  frame slot value &key kb test (slot-type :auto) kb-local-only-p
+slot-has-value-p  frame slot &key kb (slot-type :auto) kb-local-only-p
+slot-p  frame thing &key kb slot-type kb-local-only-p
+create-slot  name attach-to &key kb create-p slot-type error-p kb-local-only-p
+delete-slot  slot &key kb delete-values-p kb-local-only-p
+rename-slot  slot new-name &key kb kb-local-only-p
+mapcar-slot-values  frame slot function &key kb (local-only-p nil) (slot-type :auto) (number-of-values :all) (kb-local-only-p t)
+mapc-slot-values  frame slot function &key kb (local-only-p nil) (slot-type :auto) (number-of-values :all) (kb-local-only-p t)
+do-slot-values  (var frame slot &key kb (local-only-p nil) (slot-type :auto) (number-of-values :all) kb-local-only-p) &body body Macro
+create-facet  name frame slot &key kb create-p (slot-type :auto) kb-local-only-p
+get-facet-values  frame slot facet &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+get-facet-value  frame slot facet &key kb local-only-p (slot-type :auto) kb-local-only-p
+get-frame-with-facet-value  frame slot facet value &key kb local-only-p (slot-type :auto) kb-local-only-p
+put-facet-values  frame slot facet values &key kb (slot-type :auto) kb-local-only-p
+put-facet-value  frame slot facet value &key kb (slot-type :auto) kb-local-only-p
+add-facet-value  frame slot facet value &key kb test (slot-type :auto) kb-local-only-p
+replace-facet-value  frame slot facet old-value new-value &key kb test (slot-type :auto) kb-local-only-p
+remove-facet-value  kb frame slot facet value &key kb test (slot-type :auto) kb-local-only-p
+remove-local-facet-values  frame slot facet &key kb (slot-type :auto) kb-local-only-p
+member-facet-value-p  frame slot facet value &key kb test kb-local-only-p
+facet-has-value-p  frame slot facet &key kb kb-local-only-p
+facet-p  frame slot thing &key kb (slot-type :auto) kb-local-only-p
+get-slot-facets  frame slot &key kb local-only-p (slot-type :auto) kb-local-only-p
+mapcar-facet-values  frame slot facet function &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+mapc-facet-values  frame slot facet function &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p
+do-facet-values  (var frame slot facet &key kb local-only-p (slot-type :auto) (number-of-values :all) kb-local-only-p) &body body Macro
+mapcar-slot-facets  frame slot function &key kb local-only-p (slot-type :auto) kb-local-only-p
+mapc-slot-facets  frame slot function &key kb local-only-p (slot-type :auto) kb-local-only-p
+do-slot-facets  (var frame slot &key kb local-only-p (slot-type :auto) kb-local-only-p) &body body Macro
+create-kb  name &key (prototype (class-prototype (class-of (current-kb)))) initargs
+delete-kb   &key kb
+open-kb  &key filename status kb force-load-p error-p
+close-kb  &key kb save-updates-p flush-memory-p
+save-kb  &key kb
+revert-kb  &key kb error-p
+kb-p  kb
+find-kb  name-or-kb &key error-p
+find-kb-of-type  name-or-kb &key (prototype (class-prototype (class-of (current-kb)))) error-p
+current-kb 
+with-current-kb  kb &body body
+with-kb-io-syntax  (var &key kb (purpose :file)) &body body Macro
+goto-kb  kb
+rename-kb  kb new-name
+get-all-kbs 
+get-kbs  &key (prototype (class-prototype (class-of (current-kb))))
+get-kb-frames  &key kb kb-local-only-p
+mapcar-kb-frames  function &key kb kb-local-only-p
+mapc-kb-frames  function &key kb kb-local-only-p
+do-kb-frames  (var &key kb kb-local-only-p) &body Macro
+get-kb-root-classes  &key type kb kb-local-only-p
+get-kb-instances  &key kb kb-local-only-p
+mapcar-kb-instances  function &key kb kb-local-only-p
+mapc-kb-instances  function &key kb kb-local-only-p
+do-kb-instances  (var &key kb kb-local-only-p) &body body Macro
+get-kb-slots  &key kb kb-local-only-p
+mapcar-kb-slots  function &key kb kb-local-only-p
+mapc-kb-slots  function &key kb kb-local-only-p
+do-kb-slots  (var &key kb kb-local-only-p) &body body Macro
+get-kb-facets  &key kb kb-local-only-p
+mapcar-kb-facets  function &key kb kb-local-only-p
+mapc-kb-facets  function &key kb kb-local-only-p
+do-kb-facets  (var &key kb kb-local-only-p) &body body Macro
+frame-violations  frame &key kb return-type
+slot-violations  frame slot &key values kb return-type

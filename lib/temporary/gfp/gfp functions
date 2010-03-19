@@ -1,0 +1,191 @@
+  GFP functions: 
+  More information on these functions can be found at:
+  http://www.ai.sri.com/~gfp/spec/paper/node63.html
+
+IMPLEMENTED:    
+   get_slot_values
+   get_slot_value 
+   get_class_all_instances 
+   instance_all_instance_of_p
+   member_slot_value_p 
+   fequal 
+   current_kb  
+   put_slot_values
+   put_slot_value
+   add_slot_value
+   replace_slot_value
+   remove_slot_value
+   coercible_to_frame_p
+   class_all_type_of_p
+   get_instance_direct_types
+   get_instance_all_types
+   get_frame_slots
+   put_instance_types
+   save_kb
+   revert_kb
+   
+ALL:
+add-facet-value
+add-slot-value
+behavior-enabled-p
+class-all-sub-of-p
+class-all-super-of-p
+class-all-type-of-p
+class-direct-sub-of-p
+class-direct-super-of-p
+class-direct-type-of-p
+class-disjoint-p
+class-p
+close-kb
+coerce-to-frame
+coercible-to-frame-p
+consistent-classes-p
+copy-frame
+create-class
+create-facet
+create-frame
+create-instance
+create-kb
+create-slot
+current-kb
+defgfpop
+defloop-expander
+delete-frame
+delete-kb 
+delete-slot
+do-class-all-instances
+do-class-all-subs
+do-class-all-supers
+do-class-direct-instances
+do-class-direct-subs
+do-class-direct-supers
+do-facet-values
+do-frame-slots
+do-instance-all-types
+do-instance-direct-types
+do-kb-classes
+do-kb-facets
+do-kb-frames
+do-kb-instances
+do-kb-slots
+do-slot-facets
+do-slot-values
+equivalent-p
+facet-has-value-p
+facet-p
+find-kb
+find-kb-of-type
+follow-slot-chain
+frame-eql
+frame-in-kb-p
+Frame-in-kb-p
+frame-object-p
+frame-violations
+get-all-behaviors
+get-all-kbs
+get-behavior-values
+get-class-all-instances
+get-class-all-subs
+get-class-all-supers
+get-class-direct-instances
+get-class-direct-subs
+get-class-direct-supers
+get-facet-value
+get-facet-values
+get-frame-facets
+get-frame-handle
+get-frame-in-kb
+get-frame-labeled
+Get-frame-labeled
+get-frame-name
+get-frame-named
+get-frame-pretty-name
+get-frame-slots
+get-frame-type
+get-frame-with-facet-value
+get-frame-with-slot-value
+get-instance-all-types
+get-instance-direct-types
+get-kb-classes
+get-kb-facets
+get-kb-frames
+get-kb-instances
+get-kb-root-classes
+get-kbs
+get-kb-slots
+get-own-slots
+get-slot-facets
+get-slot-type
+get-slot-value
+get-slot-values
+get-supported-behaviors
+goto-kb
+instance-p
+kb-p
+mapcar-class-all-instances
+mapcar-class-all-subs
+mapcar-class-all-supers
+mapcar-class-direct-instances
+mapcar-class-direct-subs
+mapcar-class-direct-supers
+mapcar-facet-values
+mapcar-frame-slots
+mapcar-instance-all-types
+mapcar-instance-direct-types
+mapcar-kb-classes
+mapcar-kb-facets
+mapcar-kb-frames
+mapcar-kb-instances
+mapcar-kb-slots
+mapcar-slot-facets
+mapcar-slot-values
+mapc-class-all-instances
+mapc-class-all-subs
+mapc-class-all-supers
+mapc-class-direct-instances
+mapc-class-direct-subs
+mapc-class-direct-supers
+mapc-facet-values
+mapc-frame-slots
+mapc-instance-all-types
+mapc-instance-direct-types
+mapc-kb-classes
+mapc-kb-facets
+mapc-kb-frames
+mapc-kb-instances
+mapc-kb-slots
+mapc-slot-facets
+mapc-slot-values
+member-behavior-values-p
+member-facet-value-p
+member-slot-value-p
+most-general-classes
+most-specific-classes
+open-kb
+primitive-p
+print-frame
+put-behavior-values
+put-class-supers
+put-facet-value
+put-facet-values
+put-instance-types
+put-slot-value
+put-slot-values
+remove-facet-value
+remove-local-facet-values
+remove-local-slot-values
+remove-redundant-classes
+remove-slot-value
+rename-frame
+rename-kb
+rename-slot
+replace-facet-value
+replace-slot-value
+revert-kb
+save-kb
+slot-has-value-p
+slot-p
+slot-type
+slot-violations
+with-current-kb
+with-kb-io-syntax

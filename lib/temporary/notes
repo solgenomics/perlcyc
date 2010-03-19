@@ -1,0 +1,18 @@
+Note that the optional parameters of all functions are not supported
+in perlcyc, except for all_pathways() which can use the optional
+arguments :all T to get the base pathways only (no super-pathways).
+
+sub all_pathways {    
+    my $self = shift;
+    my $optional = shift || ":all";
+    return $self-> call_func("all-pathways $optional");
+}
+
+
+if keyword: 
+:arg 'value
+else:
+:value
+
+not checking values or handling |...| things
+checking valid opt_arg names (need to convert to lisp)
