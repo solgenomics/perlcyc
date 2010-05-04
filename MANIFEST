@@ -1,0 +1,23 @@
+Build.PL
+Changes
+INSTALL
+lib/perlcyc.pm
+'lib/temporary/gfp/function list 1'
+'lib/temporary/gfp/function list 2'
+'lib/temporary/gfp/function list 3'
+lib/temporary/gfp/functions
+lib/temporary/gfp/get-function-list.pl
+'lib/temporary/gfp/gfp functions'
+lib/temporary/gfp/pull-functions-gfp.pl
+lib/temporary/notes
+'lib/temporary/perlcyc/all functions'
+'lib/temporary/perlcyc/functions from website'
+'lib/temporary/perlcyc/gfp functions'
+'lib/temporary/perlcyc/list of functions by type'
+'lib/temporary/perlcyc/perlcyc functions all'
+'lib/temporary/perlcyc/previously implemented'
+lib/temporary/perlcyc/pull-functions-perlcyc.pl
+lib/temporary/README
+MANIFEST			This list of files
+README
+t/test_perlcyc.t
