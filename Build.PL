@@ -12,7 +12,7 @@ my $build = Module::Build->new(
 
     # and now the list of perl module dependencies
     requires           => {
-     'perl'   => '5.6.1',
+     'perl'   => '5.10',
      'Carp'   => 0,
      'Socket' => 0,
     },
