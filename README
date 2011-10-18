@@ -1,15 +1,15 @@
 NAME
-    perlcyc - A Perl interface for Pathway Tools software for UNIX-based
-    systems.
+    Bio::PerlCyc - A Perl interface for Pathway Tools software for
+    UNIX-based systems.
 
 SYNOPSIS
-    perlcyc is a Perl interface for Pathway Tools software. Pathway Tools
+    PerlCyc is a Perl interface for Pathway Tools software. Pathway Tools
     software needs to run a special socket server program for this module to
     work (see below).
 
-    "use perlcyc;"
+    "use Bio::Perlcyc;"
 
-    "my $cyc = perlcyc -> new("ARA");" "my @pathways = $cyc ->
+    "my $cyc = Bio::PerlCyc -> new("ARA");" "my @pathways = $cyc ->
     all_pathways();"
 
 PATHWAY TOOLS REQUIREMENTS
@@ -23,9 +23,9 @@ PATHWAY TOOLS REQUIREMENTS
     accept connections and queries.
 
 DESCRIPTION
-    perlcyc.pm is a Perl module for accessing internal Pathway-Tools
-    functions. For the description of what the individual functions do,
-    please refer to the Pathway Tools documentation at
+    PerlCyc is a Perl module for accessing internal Pathway-Tools functions.
+    For the description of what the individual functions do, please refer to
+    the Pathway Tools documentation at
     http://bioinformatics.ai.sri.com/ptools .
 
     In general, the Lisp function name has to be converted to something
@@ -151,9 +151,10 @@ DESCRIPTION
        direct-activators
        direct-inhibitors
 
+       added 01/2010:
+       
 
-
-      not supported:
+  not supported:
        get_frames_matching_value (why not?)
 
       Internal functions:
@@ -173,9 +174,9 @@ DESCRIPTION
 EXAMPLES
     Change product type for all genes that are in a pathway to 'Enzyme'
 
-     use perlcyc;
+     use Bio::PerlCyc;
 
-     my $cyc = perlcyc -> new ("ARA");
+     my $cyc = Bio::PerlCyc -> new ("ARA");
      my @pathways = $cyc -> all_pathways();
 
      foreach my $p (@pathways) {
@@ -188,7 +189,7 @@ EXAMPLES
     Load a file containing two columns with accession and a comment into the
     comment field of the corresponding accession:
 
-     use perlcyc;
+     use Bio::PerlCyc;
      use strict;
      
  my $file = shift;
@@ -199,7 +200,7 @@ EXAMPLES
      open (F, "<$file") || die "Can't open file\n";
 
      print STDERR "Connecting to AraCyc...\n";
-     my $cyc = perlcyc -> new("ARA");
+     my $cyc = Bio::PerlCyc -> new("ARA");
 
      print STDERR "Getting Gene Information...\n";
      my @genes = $cyc -> get_class_all_instances("|Genes|");
@@ -233,13 +234,13 @@ EXAMPLES
     Add a locus link to the TAIR locus page for each gene in the database
 
      use strict;
-     use perlcyc;
+     use Bio::PerlCyc;
 
      my $added =0;
      my $genesprocessed=0;
 
      print "Connecting to AraCyc...\n";
-     my $cyc = perlcyc -> new ("ARA");
+     my $cyc = Bio::PerlCyc -> new ("ARA");
 
      print "Getting Gene Information...\n";
      my @genes = $cyc -> get_class_all_instances ("|Genes|");
@@ -260,7 +261,7 @@ EXAMPLES
 
 TROUBLESHOOTING
     If your program terminates with the following error message: "connect:
-    No such file or directory at perlcyc.pm line 166." then the
+    No such file or directory at Bio::Perlcyc.pm line 166." then the
     lisp_server.lisp module in Pathway Tools is not running. Refer to
     http://aracyc.stanford.edu for more information on how to run the server
     program.
@@ -271,8 +272,7 @@ LICENSE
     According to the MIT License,
     http://www.opensource.org/licenses/mit-license.php
 
-    Copyright (c) 2002 by Lukas Mueller, The Arabidopsis Information
-    Resource (TAIR) and the Carnegie Institution of Washington.
+    Copyright (c) 2002-2011 by Lukas Mueller.
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the
@@ -298,4 +298,64 @@ AUTHOR
 
 ACKNOWLEDGMENTS
     Many thanks to Suzanne Paley, Danny Yoo and Thomas Yan.
+
+FUNCTIONS
+    The following methods are defined in this class:
+
+  new
+     Usage:         my $cyc = Bio::PerlCyc->new("ECO");  
+     Desc:          
+     Ret:
+     Args:
+     Side Effects:
+     Example:
+
+  read_function_defs
+        Reads the function defs from the __DATA__ section.
+
+  get_function_def
+        Returns the definition of a function as a hash with the following keys:
+           perl_name
+           list_name
+           params
+           keyed_params
+           optional_params
+           return_type
+        Args: the perl function name.
+
+  construct_call()
+        Constructs the call from the information provided to AUTOLOAD.
+        Called from AUTOLOAD.
+
+  socket_name
+      Usage: $cyc->socket_name($new_socket_name);
+      Desc : get/set the name of the local socket file
+             to connect to
+      Args : (optional) local socket name.
+             defaults to '/tmp/ptools-socket'
+      Ret  : current set local socket filename
+      Side Effects: none
+      Example:
+
+  makeSocket {
+        Creates the socket in the file system.
+
+  close()
+        Closes the socket.
+
+  debug()
+     Usage:
+     Desc:
+     Ret:
+     Args:
+     Side Effects:
+     Example:
+
+  debug_on(), debug_off()
+     Usage: 
+     Desc:         Turn debug on or off.
+     Ret:
+     Args:
+     Side Effects: if turned on, debug information sent to STDERR
+     Example:
 
