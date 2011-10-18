@@ -1051,6 +1051,8 @@ systems.
 
 =head1 SYNOPSIS
 
+This version is deprecated. Use the new version 2.0.
+
 perlcyc is a Perl interface for Pathway Tools software. Pathway Tools 
 software needs to run a special socket server program for this module
 to work (see below).
