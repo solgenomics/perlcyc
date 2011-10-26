@@ -1062,24 +1062,47 @@ sub debug_off {
 
 __DATA__
 
+print_frame print-frame string frame kb,inference-level,kb-local-only-p
+primitive_p primitive-p class kb,kb-local-only-p
+put_frame_name put-frame-name string frame,new-name kb,kb-local-only-p
+get_frame_name get-frame-name string frame kb,kb-local-only-p
+put_frame_pretty_name put-frame-pretty-name frame,name kb,kb-local-only-p
+get_frame_pretty_name string frame kb,kb-local-only-p
+get_frame_in_kb get-frame-in-kb two_values thing kb,error-p,kb-local-only-p
+put_instance_types put-instance-types frame,new-types kb,kb-local-only-p
 get_slot_value get-slot-value string frame slot
 get_class_slot_slotvalue get-class-slot-slotvalue string frame slot
 get_class_all_instances get-class-all-instances list - -
 get_class_all_subs get-class-all-subs list class
 instance_all_instance_of_p instance-all-instance-of-p boolean class
+get_class_subclasses get-class-subclasses list class kb,inference-level,number-of-values,kb-local-only-p
+get_class_instances get-class-instances list class kb,inference-level,number-of-values,kb-local-only-p
+individual_p individual-p boolean thing kb,kb-local-only-p
 member_slot_value_p member-slot-value-p boolean frame slot value
 put_slot_values put-slot-values - - -
 put_slot_value put-slot-value - frame,slot,value
 add_slot_value add-slot-value - frame,slot,value
+detach_slot detach-slot frame,slot kb,slot-type,value-selector,kb-local-only-p
+slot_has_value_p boolean frame,slot kb,inference-level,slot-type,value-selector,kb-local-only-p
+get_slot_type get-slot-type string frame,slot kb,inference-level,kb-local-only-p
+frame_has_slot_p frame-has-slot-p frame,slot kb,inference-level,slot-type,kb-local-only-p
+slot_p slot-p boolean thing kb,inference-level,kb-local-only-p
+subclass_of_p boolean subclass,superclass kb,inference-level,kb-local-only-p
+superclass_of_p superclass-of-p superclass,subclass kb,inference-level,kb-local-only
+type_of_p type-of-p boolean class,frame kb,inference-level,kb-local-only
 replace_slot_value replace-slot-value frame,slot,old_value,new_value -
 remove_slot_value remove-slot-value frame,slot -
+rename_slot rename-slot string slot,new-name kb,kb-local-only-p
 coercible_to_frame_p coercible-to-frame-p boolean frame -
 class_all_type_of_p class-all-type-of-p boolean frame,instance - 
 get_instance_direct_types get-instance-direct-types string frame - 
-get_frame_slots get-frame-slots string frame - 
+get_frame_slots get-frame-slots string frame kb,inference-level,slot-type,kb-local-only-p
+get_frame_type get-frame-type string thing kb,inference-level,kb-local-only-p
+get_frames_matching get-frames-matching list pattern kb,wild-cards-allowed,selector,force-case-insensitive-p,kb-local-only-p
 put_instance_types put-instance-types string frame,new_types -
 save_kb save-kb - - -
-revert_kb revert-kb - - -
+save_kb_as save-kb-as - new-name-or-locator kb
+revert_kb revert-kb - - kb
 all_pathways all-pathways list - selector,base -
 all_orgs all-orgs list - verbose -
 all_rxns all-rxns list - type -
@@ -1141,17 +1164,20 @@ direct_inhibitors direct-inhibitors list entity -
 create_facet create-facet string name,frame,slot - kb,create-p,kb-local-only-p
 get_facet_values get-facet-values string frame,slot,facet,value - kb,kb-local-only-p
 get_facet_value get-facet-value string frame,slot,facet,value - 
-get_frame_with_facet_value get-frame-with-facet-value
-put_facet_values put-facet-values
-put_facet_value put-facet-value
-add_facet_value add-facet-value
-replace_facet_value replace-facet-value 
-remove_local_facet_values remove-local-facet-values
-member_facet_value_p member-facet-value-p
-facet_has_value_p facet-has-value-p
-facet_p facet-p
-get_slot_facets get-slot-facets
-mapcar_facet_values mapcar-facet-values
-mapc_facet_values mapc-facet-values
-do_facet_values do-facet-values
-mapcar_slot_facets mapcar-slot-facets
+get_frame_with_facet_value get-frame-with-facet-value list frame,slot,facet,value kb,local-only-p,kb-only-p
+put_facet_values put-facet-values string frame,slot,facet,values kb,kb-local-only-p
+put_facet_value put-facet-value string frame,slot,facet,value kb,kb-local-only-p
+add_facet_value add-facet-value string frame,slot,facet,value kb,test,kb-local-only-p
+replace_facet_value replace-facet-value string frame,slot,facet,old-value,new-value kb,test,kb-local-only-p
+remove_local_facet_values remove-local-facet-values string frame,slot,facet,value kb,kb-local-only-p
+member_facet_value_p member-facet-value-p string frame,slot,facet,value kb,test,kb-local-only-p
+facet_has_value_p facet-has-value-p string frame,slot,facet kb,kb-local-only-p
+facet_p facet-p boolean frame,slot,thing kb,kb-local-only-p
+get_slot_facets get-slot-facets list frame,slot kb,local-only-p,kb-local-only-p
+mapcar_facet_values mapcar-facet-values string frame,slot,facet,function kb,local-only-p,kb-local-only-p
+mapc_facet_values mapc-facet-values string frame,slot,facet,function kb,local-only-p,kb-local-only-p
+do_facet_values do-facet-values string var,frame,slot,facet kb,local-only-p,kb-local-only-p
+mapcar_slot_facets mapcar-slot-facets list frame,slot,function kb,local-only-p,kb-local-only-p
+mapc-slot-facets list frame,slot,function kb,local-only-p,kb-local-only
+rename_facet rename-facet string facet,new-name kb,kb-local-only-p
+slot_has_facet_p boolean frame,slot,facet kb,inference-level,slot-type,kb-local-only-p
