@@ -327,16 +327,17 @@ our $AUTOLOAD;
 
 use Socket;
 use Carp;
-
+use Data::Dumper;
 
 sub AUTOLOAD {
     my $self = shift;
     my $perl_name = $AUTOLOAD;
-    print STDERR "PROCESSING $AUTOLOAD ".(join " ", @_)."\n" if ($self->debug());
+    print STDERR "PROCESSING $AUTOLOAD ".(join " ", @_)."\n";
     $perl_name =~ s/.*::(.+)$/$1/;
     if (my $f = $self->get_function_def($perl_name)) { 
 	$self->construct_call($f, @_);
     }
+    
 }
 
 =head2 new
@@ -379,6 +380,26 @@ sub new {
     return $self;
 }
 
+=head2 test_mode
+
+Constructor for off-line testing.
+
+=cut
+
+sub test_mode { 
+    my $class = shift;
+    my $organism = shift;
+    my %args = @_;
+    
+    my $self = bless {}, $class;
+    $self->{_organism} = $organism;
+    $self->{_debug} = $args{debug};
+    $self->{_defs} = {};
+    $self->read_function_defs();
+    return $self;
+}
+
+
 =head2 read_function_defs
 
     Reads the function defs from the __DATA__ section.
@@ -389,20 +410,26 @@ sub read_function_defs {
     my $self = shift;
     while (<DATA>) { 
 	chomp;
-	my ($perl_name, $lisp_name, $return_type, $params, $optional_params, $named_params, @description) = split /\s+/;
+	my ($perl_name, $lisp_name, $return_type, $pos_params, $optional_params, $named_params, @description) = split /\s+/;
 	
 	my $description = join " ", @description;
+
+	if ($pos_params eq "-") { $pos_params = ''; }
+	if ($optional_params eq "-") { $optional_params = ""; }
+	if ($named_params eq "-") { $named_params = ""; }
 
 	$self->{_defs}->{$perl_name} = {
 	    perl_name => $perl_name,
 	    lisp_name => $lisp_name, 
-	    params => $params, 
-	    named_params => $named_params,
-	    optional_params => $optional_params, 
+	    pos_params => $pos_params ? [ split ",", $pos_params ] : [], 
+	    named_params => $named_params ? [ split ",", $named_params ]: [],
+	    optional_params => $optional_params ? [ split ",",$optional_params ]: [],
 	    return_type => $return_type,
 	    description => $description 
 	};
     }
+    $self->debug_on();
+    $self->debug( Data::Dumper::Dumper($self->{_defs}) );
 }
 
 =head2 get_function_def
@@ -410,7 +437,7 @@ sub read_function_defs {
     Returns the definition of a function as a hash with the following keys:
        perl_name
        list_name
-       params
+       pos_params
        keyed_params
        optional_params
        return_type
@@ -454,62 +481,65 @@ sub construct_call {
     
     my $f = shift;
     my @params = @_;
-
+    print STDERR "CONSTRUCT CALL\n";
+    print STDERR "PARAMS: @params\n";
+    print STDERR Data::Dumper::Dumper($f);
     my @call = ();
 
     push @call, $f->{lisp_name};
 
-    my @named_params = split ",", $f->{named_params} if (exists($f->{names_params}));
+    my @named_params = @{$f->{named_params}} if (exists($f->{names_params}));
     my %np = ();
     foreach my $a (@named_params) { 
 	$np{$a} = 1;
     }
 
-    my @optional_params = split ",", $f->{optional_params};
+    my @optional_params = @{$f->{optional_params}} if defined($f->{optional_params});
    
     # process required positional arguments
     my $i = 0;
-    if ($f->{params} ne "-") { 
-	for ($i=0; $i<@named_params; $i++) { 
-	    my $p;
-	    if (!defined($params[$i])) { 
-		die "Missing positional argument in function $f->{perl_name}";
-	    }
-	    if ($named_params[$i] =~ /frame/) { $p = protectFrameName($params[$i]); }
-	    else { 
-		$p = $params[$i];
-		
-	    }
-	    warn "Adding $p...\n";
-	    push @call, $p;
-	    $i++;
+
+    print STDERR "POS PARAMS: ".Data::Dumper::Dumper($f->{pos_params});
+
+
+    my @pos_params = @{$f->{pos_params}};
+    $self->debug("Positional arguments: @pos_params");
+    for ($i=0; $i<@pos_params; $i++) { 
+	print STDERR "Processing parameter $params[$i]..\n";
+	my $p;
+	if (!defined($params[$i])) { 
+	    die "Missing positional argument in function $f->{perl_name}";
 	}
-	
-    }
-    else { 
-	warn("function $f->{perl_name} has no required arguments.\n");
+	if ($pos_params[$i] =~ /frame/) { $p = protectFrameName($params[$i]); }
+	else { 
+	    $p = $params[$i];	
+	}
+	warn "Adding $p...\n";
+	push @call, "'".$p;
     }
     
     # process optional positional arguments
     # note: we don't need to worry about defaults, as they will be provided by LISP.
     #
 
-    warn "OPTIONAL PARAMS: @optional_params\n";
-    if ($optional_params[0] ne "-") { 
-	warn "PUSHING OPTIONAL PARAM $params[$i]...\n";
-	while (defined($params[$i]) && (ref($params[$i]) ne 'HASH')) { 
-
-	    warn("Pushing optional parameter $params[$i]\n");
-	    push @call, $params[$i];
-	    $i++;
+    if (@optional_params) { 
+	warn "OPTIONAL PARAMS: @optional_params\n";
+	if ($optional_params[0] ne "-") { 
+	    warn "PUSHING OPTIONAL PARAM $params[$i]...\n";
+	    while (defined($params[$i]) && (ref($params[$i]) ne 'HASH')) { 
+		
+		warn("Pushing optional parameter $params[$i]\n");
+		push @call, $params[$i];
+		$i++;
+	    }
+	    
 	}
-	
     }
 
     # process keyword parameters.
     # no need to worry about defaults.
     #
-    if (ref($params[$i]) eq "HASH") { 
+    if (ref($params[$i]) eq "HASH") {
 	foreach my $a (keys( %{$params[$i]} ) ) { 
 	    if (exists($np{$a})) { 
 		$np{$a}--;
@@ -532,7 +562,7 @@ sub construct_call {
      
     my $call = join " ", @call;
     
-    print STDERR "CALL: $call.\n" if ($self->debug());
+    $self->debug("CALL: $call.\n");
     if ($f->{return_type} eq "list" || $f->{return_type} eq "-") { 
 	$self->call_func($call);
     }
@@ -734,7 +764,6 @@ sub call_func {
     $self->send_query ($self->wrap_query($function));
     my @result = $self-> retrieve_results();
 
-    $self -> debug_off();
     if ($self->debug) { 
       foreach my $r (@result) {
 	print "READ TOKEN: $r\n";
@@ -1032,7 +1061,7 @@ sub perl_to_list {
 sub debug {
     my $self = shift;
     my $message = shift;
-    if ($self -> {_debug}) { print "$message\n"; }
+    if ($self -> {_debug}) { print STDERR "$message\n"; }
 } 
 
 =head2 debug_on(), debug_off()
@@ -1048,17 +1077,17 @@ sub debug {
 
 sub debug_on {
     my $self = shift;
-    $self->{_debug} = "TRUE";
+    $self->{_debug} = 1;
 }
 
 sub debug_off {
     my $self = shift;
-    $self->{_debug} = "";
+    $self->{_debug} = 0;
 }
 
 1;
 
-## DATA section lists function as: perl name, lisp name, positional arguments, optional positional arguments, named arguments.
+## DATA section lists function as: perl name, lisp name, return type, positional arguments, optional positional arguments, named arguments.
 
 __DATA__
 
@@ -1069,8 +1098,9 @@ get_frame_name get-frame-name string frame kb,kb-local-only-p
 put_frame_pretty_name put-frame-pretty-name frame,name kb,kb-local-only-p
 get_frame_pretty_name string frame kb,kb-local-only-p
 get_frame_in_kb get-frame-in-kb two_values thing kb,error-p,kb-local-only-p
-put_instance_types put-instance-types frame,new-types kb,kb-local-only-p
-get_slot_value get-slot-value string frame slot
+put_instance_types put-instance-types - frame,new-types kb,kb-local-only-p
+get_slot_value get-slot-value string frame,slot
+get_slot_values get-slot-values list frame,slot
 get_class_slot_slotvalue get-class-slot-slotvalue string frame slot
 get_class_all_instances get-class-all-instances list - -
 get_class_all_subs get-class-all-subs list class
@@ -1103,7 +1133,7 @@ put_instance_types put-instance-types string frame,new_types -
 save_kb save-kb - - -
 save_kb_as save-kb-as - new-name-or-locator kb
 revert_kb revert-kb - - kb
-all_pathways all-pathways list - selector,base -
+all_pathways all-pathways list - all -
 all_orgs all-orgs list - verbose -
 all_rxns all-rxns list - type -
 genes_of_reaction genes-of-reaction list reaction - 
@@ -1124,7 +1154,7 @@ all_cofactors all-cofactors list - -
 all_modulators all-modulators list - -
 monomers_of_protein monomers-of-protein list protein
 genes_of_protein genes-of-protein list protein
-reactions_of_enzyme reactions-of-enzyme enzyme
+reactions_of_enzyme reactions-of-enzyme list enzyme
 enzyme_p enzyme? boolean protein
 transporter_p transporter? boolean protein
 containers_of containers-of list protein
