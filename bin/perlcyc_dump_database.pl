@@ -1,7 +1,8 @@
 #!/usr/local/bin/perl -w
 use strict;
 
-use perlcyc;
+use lib 'lib/';
+use Bio::PerlCyc;
 
 my $database = shift;
 
@@ -16,10 +17,13 @@ Version 1.1, Nov 23, 2006...
 
 ##edited by Danny 4/12/2005
 
-my $cyc = new perlcyc("ARA");
+my $cyc = Bio::PerlCyc->new($database);
+
+$cyc->debug_on();
 
 my @pathways = $cyc -> all_pathways();
 #my @pathways = ("PWY-1186");
+
 
 foreach my $p (@pathways) {
     my $pathwayName = getPathwayName($p);
@@ -67,18 +71,12 @@ sub printGenesReport {
     }
 }
 
-
-
-
-
 sub getPathwayName {
     my ($p) = @_;
     my $pathwayName = $cyc -> get_slot_value($p, "COMMON-NAME");
     if (!$pathwayName) {$pathwayName = "unknown";}
     return $pathwayName;
 }
-
-
 
 sub getGeneName {
     my ($g) = @_;
@@ -100,8 +98,6 @@ sub getGeneName {
 
     return $g;
 }
-
-
 
 sub getProteinName {
     my ($protein) = @_;
