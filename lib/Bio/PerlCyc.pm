@@ -415,8 +415,9 @@ sub read_function_defs {
 	my $description = join " ", @description;
 
 	if ($pos_params eq "-") { $pos_params = ''; }
-	if ($optional_params eq "-") { $optional_params = ""; }
-	if ($named_params eq "-") { $named_params = ""; }
+	if ($optional_params && $optional_params eq "-") { $optional_params = ""; }
+	if ($named_params && $named_params eq "-") { $named_params = ""; }
+	if ($return_type eq "-") { $return_type = ""; }
 
 	$self->{_defs}->{$perl_name} = {
 	    perl_name => $perl_name,
@@ -428,7 +429,6 @@ sub read_function_defs {
 	    description => $description 
 	};
     }
-    $self->debug_on();
     $self->debug( Data::Dumper::Dumper($self->{_defs}) );
 }
 
@@ -454,7 +454,7 @@ sub get_function_def {
 	return undef;
     }
     else { 
-	warn "PerlCyc knows about the function $function...\n";
+	$self->debug("PerlCyc knows about the function $function...");
 	return $self->{_defs}->{$function};
     }
 }
@@ -481,9 +481,7 @@ sub construct_call {
     
     my $f = shift;
     my @params = @_;
-    print STDERR "CONSTRUCT CALL\n";
-    print STDERR "PARAMS: @params\n";
-    print STDERR Data::Dumper::Dumper($f);
+
     my @call = ();
 
     push @call, $f->{lisp_name};
@@ -498,14 +496,10 @@ sub construct_call {
    
     # process required positional arguments
     my $i = 0;
-
-    print STDERR "POS PARAMS: ".Data::Dumper::Dumper($f->{pos_params});
-
-
     my @pos_params = @{$f->{pos_params}};
     $self->debug("Positional arguments: @pos_params");
     for ($i=0; $i<@pos_params; $i++) { 
-	print STDERR "Processing parameter $params[$i]..\n";
+	#print STDERR "Processing parameter $params[$i]..\n";
 	my $p;
 	if (!defined($params[$i])) { 
 	    die "Missing positional argument in function $f->{perl_name}";
@@ -704,9 +698,7 @@ sub send_query {
     my $self = shift;
     my $query = shift;
     $self->makeSocket();
-    $self-> debug_off();
     $self -> debug("Now sending query: $query");
-    $self-> debug_off();
     my $s = $self->{_socket};
     print $s "$query\n";
 }       
@@ -760,13 +752,13 @@ sub call_func {
     #
     my $self = shift;
     my $function = shift;
-##    print $self->wrap_query($function), "\n"; ## debug
+
     $self->send_query ($self->wrap_query($function));
     my @result = $self-> retrieve_results();
 
     if ($self->debug) { 
       foreach my $r (@result) {
-	print "READ TOKEN: $r\n";
+	  print STDERR "READ TOKEN: $r\n";
       }
     }
 
@@ -867,7 +859,6 @@ sub split_up_types {
     }
     @titles = reverse @titles;
 
-##    print "DEBUG dyoo: ", join(", ", @results), "\n";
     my @row;
     for my $e (@results, 'THINGS') {
 	if ($e eq 'FRAMES') {
